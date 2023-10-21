@@ -1,0 +1,37 @@
+# Template file for 'rawspeed'
+pkgname=rawspeed
+version=3.6
+revision=1
+#archs="i686 x86_64"
+#build_wrksrc=
+build_style=cmake
+configure_args=" -DCMAKE_BUILD_TYPE=Release 
+ -DBUILD_TESTING=false
+ -DBUILD_BENCHMARKING=false
+"
+#make_build_args=""
+#make_install_args=""
+#conf_files=""
+#make_dirs="/var/log/dir 0755 root root"
+hostmakedepends="pkg-config"
+makedepends="pugixml-devel zlib-devel libgomp-devel libxml2-devel libjpeg-turbo-devel"
+depends="pugixml"
+short_desc="raw speed"
+maintainer="Daniel Martinez <danielpedromartinez@duck.com>"
+license="LGPL-2.0"
+homepage="https://github.com/darktable-org/rawspeed"
+#changelog=""
+distfiles="https://github.com/darktable-org/rawspeed/archive/refs/tags/v3.6.tar.gz"
+checksum=95594575760ffcc048965af9ae1480211d019144d0d06844a6ef292cfc7d4dc1
+
+#
+#rawspeed-devel_package() {
+#	depends="${makedepends} rawspeed>=${version}_${revision}"
+#	short_desc+=" - development files"
+#	pkg_install() {
+#		vmove usr/include
+#		vmove usr/lib/pkgconfig
+#		vmove "usr/lib/*.a"
+#		vmove "usr/lib/*.so"
+#	}
+#}
