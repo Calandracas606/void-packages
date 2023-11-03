@@ -1,7 +1,7 @@
-# Template file for 'llvm15'
-pkgname=llvm15
-version=15.0.7
-revision=3
+# Template file for 'llvm17'
+pkgname=llvm17
+version=17.0.6
+revision=1
 build_wrksrc=llvm
 build_style=cmake
 _ext_suffix=".cpython-${py3_ver/./}-linux-${XBPS_TARGET_LIBC/glibc/gnu}.so"
@@ -24,24 +24,29 @@ configure_args="
  -DLLVM_LINK_LLVM_DYLIB=YES
  -DLLVM_ENABLE_RTTI=YES
  -DLLVM_ENABLE_FFI=YES
+ -DLLVM_ENABLE_RUNTIMES=all
  -DLLVM_BINUTILS_INCDIR=/usr/include
  -DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR=NO
  -DLLDB_PYTHON_RELATIVE_PATH=lib/python${py3_ver}/site-packages
  -DLLDB_PYTHON_EXE_RELATIVE_PATH=bin/python${py3_ver}
- -DLLDB_PYTHON_EXT_SUFFIX=$_ext_suffix"
+ -DLLDB_PYTHON_EXT_SUFFIX=$_ext_suffix "
 hostmakedepends="perl python3 zlib-devel libffi-devel swig python3-Sphinx
- python3-recommonmark python3-sphinx-automodapi"
+ python3-recommonmark python3-sphinx-automodapi git python3-sphinx-markdown-tables python3-yaml pkg-config "
 makedepends="python3-devel zlib-devel elfutils-devel libffi-devel libedit-devel
- libxml2-devel binutils-devel"
-depends="libllvm15>=${version}_${revision}"
-short_desc="Low Level Virtual Machine"
-maintainer="Orphaned <orphan@voidlinux.org>"
+ libxml2-devel binutils-devel "
+depends="libllvm17>=${version}_${revision}"
+short_desc="LLVM Compiler Infrastructure Project"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
 license="Apache-2.0"
 homepage="https://www.llvm.org"
 distfiles="https://github.com/llvm/llvm-project/releases/download/llvmorg-${version}/llvm-project-${version}.src.tar.xz"
-checksum=8b5fcb24b4128cf04df1b0b9410ce8b1a729cb3c544e6da885d234280dedeac6
+checksum=58a8818c60e6627064f312dbf46c02d9949956558340938b71cf731ad8bc0813
 lib32disabled=yes
 python_version=3
+
+if [ "$XBPS_CCACHE" ]; then
+	configure_args+=" -DLLVM_CCACHE_BUILD=YES "
+fi
 
 if [ "$XBPS_TARGET_LIBC" = "musl" ]; then
 	configure_args+=" -DLIBCXX_HAS_MUSL_LIBC=YES
@@ -54,10 +59,12 @@ case "$XBPS_TARGET_MACHINE" in
 	ppc*) configure_args+=" -DCLANG_ENABLE_CLANGD=OFF" ;;
 esac
 
-_enabled_projects="clang;clang-tools-extra;compiler-rt;libcxx;libcxxabi;libunwind;lld"
+_enabled_projects="clang;clang-tools-extra;compiler-rt;lld;mlir;libclc;polly"
 
 _lldb_enable=yes
 _libomp_enable=no
+_flang_enable=no
+_llvm_bolt_enable=no
 
 case "$XBPS_TARGET_MACHINE" in
 	ppc64le*) ;;
@@ -83,9 +90,35 @@ if [ "$_libomp_enable" = "yes" ]; then
 	fi
 fi
 
+case "$XBPS_TARGET_MACHINE" in
+	x86_64*|aarch64*) _flang_enable=yes;;
+esac
+
+if [ "$_flang_enable" = "yes" ]; then
+	_enabled_projects+=";flang"
+	subpackages+=" flang flang-devel "
+fi
+
+case "$XBPS_TARGET_MACHINE" in
+	x86_64*|aarch64*) _llvm_bolt_enable=yes;;
+esac
+
+if [ "$_llvm_bolt_enable" = "yes" ]; then
+	_enabled_projects+=";bolt"
+	subpackages+=" llvm-bolt "
+fi
+
+# For OCaml bindings and lldb lua scripting
+if [ -z "$CROSS_BUILD" ]; then
+	# OCaml cross build is broken
+	hostmakedepends+=" ocaml ocaml-findlib "
+	# lldb cross build fails with lua
+	makedepends+=" lua53-devel "
+fi
+
 subpackages+=" clang clang-analyzer libclang libclang-cpp
  llvm-libunwind llvm-libunwind-devel libcxx libcxx-devel
- libcxxabi libcxxabi-devel libllvm15"
+ libcxxabi libcxxabi-devel libllvm17 mlir "
 
 if [ "$_lldb_enable" = "yes" ]; then
 	# XXX fails to cross compile due to python
@@ -155,16 +188,28 @@ pre_configure() {
 			CXXFLAGS="$BUILD_CXXFLAGS" LDFLAGS="$BUILD_LDFLAGS" \
 			cmake ../.. -DCMAKE_BUILD_TYPE=Release \
 			-DLLVM_ENABLE_PROJECTS=${_enabled_projects}
+
 		make ${makejobs} -C utils/TableGen
-		make ${makejobs} -C tools/clang/utils/TableGen
-		make ${makejobs} -C tools/clang/tools/extra/clang-tidy/misc/ConfusableTable
-		make ${makejobs} -C tools/clang/tools/extra/pseudo/gen
-		[ "$_lldb_enable" = "yes" ] && make ${makejobs} -C tools/lldb/utils/TableGen
 		configure_args+=" -DLLVM_TABLEGEN=${wrksrc}/llvm/build/HOST/bin/llvm-tblgen"
+
+		make ${makejobs} -C tools/clang/utils/TableGen
 		configure_args+=" -DCLANG_TABLEGEN=${wrksrc}/llvm/build/HOST/bin/clang-tblgen"
+
+		make ${makejobs} -C tools/mlir/tools/mlir-pdll
+		configure_args+=" -DMLIR_TABLEGEN=${wrksrc}/llvm/build/HOST/bin/mlir-tblgen"
+		configure_args+=" -DMLIR_PDLL_TABLEGEN=${wrksrc}/llvm/build/HOST/bin/mlir-pdll"
+		configure_args+=" -DMLIR_LINALG_ODS_YAML_GEN=${wrksrc}/llvm/build/HOST/bin/mlir-linalg-ods-yaml-gen"
+
+		make ${makejobs} -C tools/clang/tools/extra/clang-tidy/misc/ConfusableTable
 		configure_args+=" -DCLANG_TIDY_CONFUSABLE_CHARS_GEN=${wrksrc}/llvm/build/HOST/bin/clang-tidy-confusable-chars-gen"
+		make ${makejobs} -C tools/clang/tools/extra/pseudo/gen
 		configure_args+=" -DCLANG_PSEUDO_GEN=${wrksrc}/llvm/build/HOST/bin/clang-pseudo-gen"
-		[ "$_lldb_enable" = "yes" ] && configure_args+=" -DLLDB_TABLEGEN=${wrksrc}/llvm/build/HOST/bin/lldb-tblgen"
+
+		make ${makejobs} -C tools/llvm-config
+		configure_args+=" -DLLVM_CONFIG_PATH=${wrksrc}/llvm/build/HOST/bin/llvm-config"
+
+		[ "$_lldb_enable" = "yes" ] && make ${makejobs} -C tools/lldb/utils/TableGen lldb-tblgen
+		[ "$_lldb_enable" = "yes" ] && configure_args+=" -DLLDB_TABLEGEN_EXE=${wrksrc}/llvm/build/HOST/bin/lldb-tblgen"
 		cd ../..
 	fi
 
@@ -192,6 +237,17 @@ pre_configure() {
 	configure_args+=" -DLLVM_TARGET_ARCH=${_arch}"
 	configure_args+=" -DLLVM_HOST_TRIPLE=${triplet}"
 	configure_args+=" -DLLVM_DEFAULT_TARGET_TRIPLE=${triplet}"
+}
+
+post_build() {
+
+	mkdir -p ${wrksrc}/${build_wrksrc}/runtimes-doc
+	cmake -G Ninja ${wrksrc}/runtimes -B ${wrksrc}/${build_wrksrc}/runtimes-doc \
+		-DLLVM_ENABLE_RUNTIMES="libcxx;libcxxabi;libunwind" \
+		-DLLVM_ENABLE_SPHINX=ON \
+		-DSPHINX_WARNINGS_AS_ERRORS=OFF
+
+	ninja ${makejobs} -C ${wrksrc}/${build_wrksrc}/runtimes-doc docs-libcxx-html docs-libunwind-html
 }
 
 do_install() {
@@ -222,6 +278,13 @@ do_install() {
 	vinstall ${wrksrc}/libunwind/include/unwind.h 644 usr/include
 	vinstall ${wrksrc}/libunwind/include/mach-o/compact_unwind_encoding.h \
 		644 usr/include/mach-o
+
+	# Install libcxx and libunwind docs
+	cmake -DCMAKE_INSTALL_PREFIX=${DESTDIR}/usr -P ${wrksrc}/${build_wrksrc}/runtimes-doc/libcxx/docs/cmake_install.cmake
+	cmake -DCMAKE_INSTALL_PREFIX=${DESTDIR}/usr -P ${wrksrc}/${build_wrksrc}/runtimes-doc/libunwind/docs/cmake_install.cmake
+
+	# Can this be disabled some other way?
+	rm -rf ${DESTDIR}/usr/lib64
 }
 
 clang-analyzer_package() {
@@ -236,7 +299,6 @@ clang-analyzer_package() {
 		vmove usr/share/man/man1/scan-build.1
 	}
 }
-
 clang-tools-extra_package() {
 	lib32disabled=yes
 	depends="clang-${version}_${revision} python3"
@@ -341,6 +403,61 @@ lld-devel_package() {
 	}
 }
 
+mlir_package() {
+	lib32disabled=yes
+	short_desc+=" - multi-level IR compiler framework"
+	homepage="https://mlir.llvm.org/"
+	pkg_install() {
+		vmove usr/bin/mlir-pdll
+		vmove usr/bin/mlir-tblgen
+		vmove usr/include/mlir
+		vmove usr/include/mlir-c
+		vmove usr/lib/cmake/mlir
+		vmove "usr/lib/libMLIR*"
+		vmove "usr/lib/objects-Release/obj.MLIR*"
+		vmove "usr/lib/libmlir*"
+		vmove usr/share/doc/LLVM/llvm/html/CommandGuide/mlir-tblgen.html
+		vmove usr/share/doc/LLVM/llvm/html/_sources/CommandGuide/mlir-tblgen.rst.txt
+		vmove usr/share/man/man1/mlir-tblgen.1
+	}
+}
+
+flang_package() {
+	lib32disabled=yes
+	short_desc+=" - Fortran language frontend"
+	homepage="https://flang.llvm.org/"
+	depends="mlir>=${version}_${revision}"
+	pkg_install() {
+		vmove "usr/bin/*flang*"
+		vmove "usr/lib/libflang*"
+		vmove usr/share/doc/LLVM/flang
+	}
+}
+
+flang-devel_package() {
+	lib32disabled=yes
+	short_desc+=" - Fortran language frontend - development files"
+	homepage="https://flang.llvm.org/"
+	depends="flang>=${version}_${revision}"
+	pkg_install() {
+		vmove usr/include/flang
+		vmove usr/lib/cmake/flang
+	}
+}
+
+# "bolt" package name is already used
+llvm-bolt_package() {
+	lib32disabled=yes
+	short_desc+=" - post-link optimizer"
+	homepage="https://github.com/llvm/llvm-project/tree/main/bolt"
+	depends="clang>=${version}_${revision}"
+	pkg_install() {
+		vmove "usr/bin/*bolt*"
+		vmove "usr/lib/*LLVMBOLT*"
+		vmove usr/share/doc/LLVM/bolt
+	}
+}
+
 lldb_package() {
 	lib32disabled=yes
 	depends+=" python3-six"
@@ -379,7 +496,10 @@ llvm-libunwind-devel_package() {
 		vmove "usr/include/*unwind*"
 		vmove "usr/lib/libunwind.a"
 		vmove "usr/lib/libunwind.so"
-		vmove usr/share/doc/LLVM/libunwind
+
+		LIBUNWIND_DOCS=usr/share/doc/LLVM/libunwind
+		vmkdir ${LIBUNWIND_DOCS}
+		vcopy ${wrksrc}/${build_wrksrc}/runtimes-doc/libunwind/docs/html ${LIBUNWIND_DOCS}
 	}
 }
 
@@ -415,7 +535,10 @@ libcxx-devel_package() {
 		vmove "usr/lib/libc++.so"
 		vmove "usr/lib/libc++.a"
 		vmove "usr/lib/libc++experimental.a"
-		vmove usr/share/doc/LLVM/libcxx
+
+		LIBCXX_DOCS=usr/share/doc/LLVM/libcxx
+		vmkdir ${LIBCXX_DOCS}
+		vcopy ${wrksrc}/${build_wrksrc}/runtimes-doc/libcxx/docs/html ${LIBCXX_DOCS}
 	}
 }
 
@@ -433,8 +556,7 @@ libomp-devel_package() {
 	short_desc+=" - Clang OpenMP support library - development files"
 	depends="libomp>=${version}_${revision}"
 	pkg_install() {
-		vmove "usr/include/omp*.h"
-		vmove "usr/lib/clang/${version}/include/omp*.h"
+		vmove "usr/lib/clang/${version%%.*}/include/omp*.h"
 		vmove "usr/lib/libarcher*"
 		vmove "usr/lib/libomp*.so"
 		vmove usr/lib/cmake/openmp
@@ -443,7 +565,7 @@ libomp-devel_package() {
 	}
 }
 
-libllvm15_package() {
+libllvm17_package() {
 	short_desc+=" - runtime library"
 	pkg_install() {
 		vmove "usr/lib/libLLVM-*.so*"
