@@ -1,0 +1,38 @@
+# Template file for 'AOMP'
+pkgname=AOMP
+version=18.0.0
+revision=1
+build_style=gnu-makefile
+hostmakedepends="pkg-config git cmake which wget autoconf automake rpm cpio ninja xxd flex texinfo"
+makedepends="pciutils-devel libnuma-devel libffi-devel python3-devel openmpi-devel MesaLib-devel libtool libdrm-devel gtest-devel libdwarf-devel elfutils-devel ncurses-libtinfo-devel libquadmath-devel python3-cppheaderparser python3-wheel python3-lxml python3-ply expat-devel gmp-devel mpfr-devel babeltrace-devel python-devel python3-pip libxml2-devel libedit-devel"
+short_desc="ROCm-Developer-Tools"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="Apache-2.0, MIT, NCSA"
+homepage="https://rocm.docs.amd.com"
+distfiles="https://github.com/ROCm-Developer-Tools/aomp/releases/download/rel_18.0-0/aomp-18.0-0.tar.gz"
+checksum=8b8fb2b513130dc96f082d78545397460a5e3cc80a0a7f9efafd9e0d63845ce4
+python_version=3
+nopie_files="${DESTDIR}/usr/lib/rocm_18.0-0/bin/flang-legacy ${DESTDIR}/usr/lib/rocm_18.0-0/bin/flang1 ${DESTDIR}/usr/lib/rocm_18.0-0/bin/flang2 ${DESTDIR}/usr/lib/rocm_18.0-0/bin/amdllvm"
+
+export AOMP=/usr/lib/rocm
+
+pre_configure() {
+
+	vsed -e "s/-DLLVM_ENABLE_ASSERTIONS=ON//g" \
+		-i aomp/bin/build_flang-legacy.sh \
+		-i aomp/bin/build_pgmath.sh \
+		-i aomp/bin/build_flang_runtime.sh \
+		-i aomp/bin/build_project.sh \
+		-i aomp/bin/build_flang.sh
+
+}
+
+do_install() {
+
+#	for licence in $(find . -iregex ".*license.*");
+#		do vlicense $lisence;
+#	done
+
+	vmkdir usr/lib
+	vcopy "/usr/lib/rocm*" /usr/lib
+}
