@@ -1,0 +1,71 @@
+# Template file for 'libraw-cmake'
+pkgname=libraw-cmake
+version=0.21.1
+revision=2
+build_style=cmake
+configure_args="-DENABLE_X3FTOOLS=ON -DENABLE_6BY9RPI=ON -DENABLE_RAWSPEED=ON"
+hostmakedepends="pkg-config automake libtool git rsync"
+makedepends="jasper-devel lcms2-devel libgomp-devel libxml2-devel boost-devel"
+short_desc="Raw image decoder library"
+maintainer="Orphaned <orphan@voidlinux.org>"
+license="LGPL-2.1-only, CDDL-1.0"
+homepage="https://www.libraw.org"
+changelog="https://github.com/LibRaw/LibRaw/raw/${version%.*}-stable/Changelog.txt"
+distfiles="https://www.libraw.org/data/LibRaw-${version}.tar.gz"
+checksum=630a6bcf5e65d1b1b40cdb8608bdb922316759bfb981c65091fec8682d1543cd
+
+#pre_configure() {
+#	autoreconf -fi
+#}
+#
+#
+
+#do_fetch() {
+#    cd ${XBPS_SRCDISTDIR}
+#    git clone ${homepage} ${pkgname} || true
+#    cd ${pkgname}
+#    git reset --hard origin/develop
+#    git pull
+#    git submodule update --init
+#}
+post_extract() {
+    cd ${XBPS_SRCDISTDIR}
+    git clone https://github.com/LibRaw/LibRaw-cmake.git || true
+    cd LibRaw-cmake
+    git reset --hard origin/master
+    git pull
+    git submodule update --init
+    rsync -a ${XBPS_SRCDISTDIR}/LibRaw-cmake/ ${wrksrc}/
+
+    cd ${XBPS_SRCDISTDIR}
+	git clone https://github.com/darktable-org/rawspeed.git || true
+    cd rawspeed
+    git reset --hard origin/master
+    git pull
+    git submodule update --init
+    rsync -a ${XBPS_SRCDISTDIR}/rawspeed/src/librawspeed/common ${wrksrc}/RawSpeed
+}
+
+post_install() {
+	vmkdir usr/share/licenses
+	rm -f ${DESTDIR}/usr/share/doc/libraw/Changelog.txt
+	mv ${DESTDIR}/usr/share/doc/libraw ${DESTDIR}/usr/share/licenses
+}
+
+libraw-devel_package() {
+	depends="${makedepends} libraw>=${version}_${revision}"
+	short_desc+=" - development files"
+	pkg_install() {
+		vmove usr/include
+		vmove usr/lib/pkgconfig
+#		vmove "usr/lib/*.a"
+		vmove "usr/lib/*.so"
+	}
+}
+
+libraw-progs_package() {
+	short_desc+=" - applications"
+	pkg_install() {
+		vmove usr/bin
+	}
+}
