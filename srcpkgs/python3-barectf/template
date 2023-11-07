@@ -1,0 +1,22 @@
+# Template file for 'python3-barectf'
+pkgname=python3-barectf
+version=3.1.2
+revision=1
+#archs="i686 x86_64"
+#build_wrksrc=
+build_style=python3-module
+#configure_args=""
+#make_build_args=""
+#make_install_args=""
+#conf_files=""
+#make_dirs="/var/log/dir 0755 root root"
+hostmakedepends="python3-setuptools"
+#makedepends=""
+depends="python3-setuptools"
+short_desc="ANSI C traces"
+maintainer="Daniel Martinez <danielmartinez@airmail.cc>"
+license="GPL-3.0-or-later"
+homepage="https://barectf.org/docs/barectf/3.1/index.html"
+#changelog=""
+distfiles="https://files.pythonhosted.org/packages/54/c3/fd04908425927345d4b5503f7ea2387414a25c5c038d940a9fc010f734f9/barectf-${version}.tar.gz"
+checksum=d4d626b22a33b7d9bc9ac033bba8893890aba0ee1011c9e78429a67296c09e1c
