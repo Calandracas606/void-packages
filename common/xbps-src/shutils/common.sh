@@ -568,6 +568,14 @@ setup_pkg() {
 
     set_build_options
 
+    if [ $(grep -F -x "$pkgname" ${XBPS_COMMONDIR}/lto-disabled-list) ] ; then
+        echo "lto disabled for $pkgname"
+        no_lto_flags=" -fno-lto -fno-fat-lto-objects "
+        XBPS_CFLAGS+="$no_lto_flags"
+        XBPS_CXXFLAGS+="$no_lto_flags"
+        XBPS_FFLAGS+="$no_lto_flags"
+    fi
+
     export CFLAGS="$XBPS_CFLAGS $XBPS_CROSS_CFLAGS $CFLAGS $dbgflags"
     export CXXFLAGS="$XBPS_CXXFLAGS $XBPS_CROSS_CXXFLAGS $CXXFLAGS $dbgflags"
     export FFLAGS="$XBPS_FFLAGS $XBPS_CROSS_FFLAGS $FFLAGS $dbgflags"
