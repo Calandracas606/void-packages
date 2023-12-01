@@ -1,0 +1,45 @@
+# Template file for 'Ananicy'
+pkgname=ananicy-cpp
+version=1.1.1
+revision=1
+#archs="i686 x86_64"
+#build_wrksrc=
+build_style=cmake
+configure_args="-DVERSION=${version}
+ -DENABLE_SYSTEMD=false
+ -DUSE_EXTERNAL_SPDLOG=true
+ -DUSE_EXTERNAL_FMTLIB=true"
+#make_build_args=""
+#make_install_args=""
+#conf_files=""
+#make_dirs="/var/log/dir 0755 root root"
+hostmakedepends="git pkg-config clang bpftool"
+makedepends="libbpf-devel elfutils-devel elogind-devel spdlog fmt-devel libbpf-devel"
+depends=""
+short_desc="Another Nice Daemon"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="GPL-3.0-or-later"
+homepage="https://gitlab.com/ananicy-cpp/ananicy-cpp"
+#changelog=""
+distfiles="https://gitlab.com/ananicy-cpp/ananicy-cpp/-/archive/v${version}/ananicy-cpp-v${version}.tar.gz"
+checksum=36d673c1fd2a7e52d8fd5a0e2e66045011b73125b7d8bc295019f434de87c3a1
+
+if [ -z "$CROSS_BUILD" ]; then
+	configure_args+=" -DUSE_BPF_PROC_IMPL=true "
+#	rm -f ${DESTDIR}/usr/bin/llvm-config-host
+fi
+#pre_configure() {
+#	vsed -i 's/column/col #/' Makefile 
+#}
+
+#do_install() {
+#	: ${make_cmd:=make}
+#	: ${make_install_target:=install}
+#
+#	${make_cmd} STRIP=true PREFIX=${DESTDIR} prefix=${DESTDIR} DESTDIR=${DESTDIR} ${make_install_args} ${make_install_target}
+#}
+#
+#post_install() {
+#	vsv ananicy
+#	rm -r ${DESTDIR}/lib
+#}
