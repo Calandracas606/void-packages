@@ -9,9 +9,9 @@
 #
 pkgname=rust
 version=1.74.1
-revision=1
+revision=2
 hostmakedepends="curl pkg-config python3 tar cargo-bootstrap"
-makedepends="libffi-devel ncurses-devel libxml2-devel zlib-devel llvm15"
+makedepends="libffi-devel ncurses-devel libxml2-devel zlib-devel llvm17"
 depends="rust-std gcc"
 short_desc="Safe, concurrent, practical systems language"
 maintainer="Enno Boland <gottox@voidlinux.org>"
