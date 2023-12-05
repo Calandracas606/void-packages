@@ -1,0 +1,27 @@
+# Template file for 'rocm-cmake'
+pkgname=rocm-cmake
+version=5.7.1
+revision=1
+#archs="i686 x86_64"
+#build_wrksrc=
+build_style=cmake
+#configure_args=""
+#make_build_args=""
+#make_install_args=""
+#conf_files=""
+#make_dirs="/var/log/dir 0755 root root"
+hostmakedepends="pkg-config"
+#makedepends=""
+#depends=""
+short_desc="CMake modules for ROCm"
+maintainer="Daniel Martinez <danielmartinez@airmail.cc>"
+license="MIT"
+homepage="https://github.com/RadeonOpenCompute/rocm-cmake"
+#changelog=""
+distfiles="https://github.com/RadeonOpenCompute/rocm-cmake/archive/refs/tags/rocm-5.7.1.tar.gz"
+checksum=4a4c6aa09576ccb834f869bdcb49e98cc0f0bac3678b802358065d1179a9d6f1
+
+do_install () {
+	vmkdir /usr/lib/cmake/rocm
+	vcopy "share/rocm/cmake/*" usr/lib/cmake/rocm
+}
