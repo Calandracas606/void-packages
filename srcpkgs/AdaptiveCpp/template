@@ -1,0 +1,36 @@
+# Template file for 'AdaptiveCpp'
+pkgname=AdaptiveCpp
+version=23.10.0
+revision=1
+build_style=cmake
+configure_args="
+	-DROCM_PATH=/usr/lib/rocm
+	-DACPP_VERSION_SUFFIX=Release
+ 	-DCMAKE_C_COMPILER=clang
+ 	-DCMAKE_CXX_COMPILER=clang++
+	-DWITH_OPENCL_BACKEND=ON
+	-DWITH_LEVEL_ZERO_BACKEND=ON
+	-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=True
+"
+# -DROCM_PATH=/usr/lib/rocm
+# -DCMAKE_PREFIX_PATH=/usr/lib/rocm
+conf_files="/etc/hipSYCL/syclcc.json"
+hostmakedepends="rocminfo clang lld pkg-config git doxygen jq moreutils"
+makedepends="ROCr-devel ROCt ROCm-clr HIP ROCm-device-libs llvm lld-devel zlib-devel boost-devel libzstd-devel libffi-devel libxml2-devel ncurses-devel libedit-devel libomp-devel SPIRV-Tools-devel tbb-devel intel-level-zero ocl-icd-devel"
+depends="ROCm-device-libs ROCt comgr rocminfo llvm clang lld-devel libomp-devel HIP" 
+short_desc="SYCL Implementation"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="BSD-2-Clause"
+homepage="https://adaptivecpp.github.io"
+#distfiles="https://github.com/AdaptiveCpp/AdaptiveCpp/archive/refs/tags/v${version}.tar.gz"
+#checksum=9ac3567c048a848f4e6eadb15b09750357ae399896e802b2f1dcaecf8a090064
+distfiles="https://api.github.com/repos/AdaptiveCpp/AdaptiveCpp/tarball>AdaptiveCpp-git.tar.gz"
+checksum=51e429673ab35429b81bac40a94366e6729db43febbe7077016597638ed560d4
+
+post_install() {
+	vlicense LICENSE
+	vmkdir /usr/etc
+	mv ${DESTDIR}/usr/etc ${DESTDIR}
+	jq '."default-cpu-cxx"="/usr/bin/clang++" | ."default-targets"="omp;generic"' \
+	${DESTDIR}/etc/hipSYCL/syclcc.json | sponge ${DESTDIR}/etc/hipSYCL/syclcc.json
+}
