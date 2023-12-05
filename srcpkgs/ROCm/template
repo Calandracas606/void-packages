@@ -1,0 +1,45 @@
+# Template file for 'ROCm'
+pkgname=ROCm
+version=5.7.1
+revision=1
+#archs="i686 x86_64"
+#create_wrksrc="aomp"
+#build_wrksrc="aomp"
+build_style=gnu-makefile
+#configure_args=""
+#make_build_args=""
+#make_install_args=""
+#conf_files=""
+#make_dirs="/var/log/dir 0755 root root"
+#hostmakedepends=""
+makedepends="git cmake which wget pkg-config pciutils-devel libnuma-devel libffi-devel python3 openmpi-devel MesaLib-devel libtool libdrm-devel gtest-devel libdwarf-devel autoconf automake rpm cpio ninja elfutils-devel xxd ncurses-libtinfo-devel libquadmath-devel"
+depends=""
+short_desc="ROCm-Developer-Tools"
+maintainer="Daniel Martinez <danielmartinez@airmail.cc>"
+license="GPL-3.0-or-later"
+homepage="https://rocm.docs.amd.com"
+#changelog=""
+distfiles="https://github.com/ROCm-Developer-Tools/aomp/archive/refs/tags/rocm-${version}.tar.gz"
+#distfiles="https://github.com/ROCm-Developer-Tools/aomp/releases/download/rel_18.0-0/aomp-18.0-0.tar.gz"
+checksum=ed7bbf92230b6535a353ed032a39a9f16e9987397798100392fc25e40c8a1a4e
+
+export AOMP_REPOS=${XBPS_BUILDDIR}/${pkgname}-${version}
+post_extract() {
+#	echo $(ls -ltrAh)
+#	shopt -s extglob
+
+	mkdir aomp
+	mv * aomp || true
+	cp aomp/Makefile .
+#	cd aomp
+#	AOMP_REPOS=${XBPS_BUILDDIR}/${pkgname}-${version} ./clone_aomp.sh
+}
+
+pre_build() {
+	./aomp/bin/clone_aomp.sh
+	cd aomp
+}
+
+#do_install() {
+#	vcopy usr /
+#}
