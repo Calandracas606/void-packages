@@ -1,0 +1,25 @@
+# Template file for 'ROCm-SMI-LIB'
+pkgname=ROCm-SMI-LIB
+version=5.6.1
+revision=1
+#archs="i686 x86_64"
+#build_wrksrc=
+build_style=cmake
+#configure_args="-DCMAKE_BUILD_TYPE=Release
+#	-DCMAKE_INSTALL_PREFIX=/usr/lib/rocm
+#	-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=True
+#"
+#make_build_args=""
+#make_install_args=""
+#conf_files=""
+#make_dirs="/var/log/dir 0755 root root"
+hostmakedepends="ROCm-cmake pkg-config git"
+makedepends=""
+depends=""
+short_desc="ROCm System Managment Interface"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="NCSA"
+homepage="https://github.com/ROCm/rocm_smi_lib"
+#changelog=""
+distfiles="${homepage}/archive/refs/tags/rocm-${version}.tar.gz"
+checksum=4d79cb0482b2f801cc7824172743e3dd2b44b9f6784d1ca2e5067f2fbb4ef803
