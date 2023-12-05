@@ -1,0 +1,66 @@
+# Template file for 'ROCm-clr'
+pkgname=ROCm-clr
+version=5.6.1
+revision=1
+build_wrksrc=clr-rocm-${version}
+build_style=cmake
+_clr_dir=${XBPS_BUILDDIR}/${pkgname}-${version}/clr-rocm-${version}
+_hip_dir=${XBPS_BUILDDIR}/${pkgname}-${version}/HIP-rocm-${version}
+#_hipcc_dir=${XBPS_BUILDDIR}/${pkgname}-${version}/HIPCC-rocm-${version}
+configure_args="
+	-DCLR_BUILD_HIP=ON
+	-DHIP_COMMON_DIR=$_hip_dir
+	-DHIPCC_BIN_DIR=/usr/bin
+	-DROCM_PATH=/usr
+"
+#	-DCLR_BUILD_OCL=ON
+# -DCMAKE_INSTALL_PREFIX=/usr/lib/rocm
+#	-DCMAKE_PREFIX_PATH=/usr/lib/rocm
+#	-DCMAKE_INSTALL_RPATH=/usr/lib
+#	-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=True
+#hostmakedepends="llvm-project-amd ROCm-cmake pkg-config xxd git python3-cppheaderparser"
+hostmakedepends="llvm-project-amd-devel ROCm-cmake pkg-config xxd git python3-cppheaderparser"
+#makedepends="llvm-project-amd-devel ROCr-devel comgr-devel libnuma-devel MesaLib-devel ncurses-libtinfo-devel libxml2-devel libzstd-devel"
+makedepends="hipcc ROCr-devel comgr libnuma-devel libffi-devel libedit-devel MesaLib-devel ncurses-libtinfo-devel libxml2-devel libzstd-devel"
+short_desc="AMD CLR - Compute Language Runtimes"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="MIT"
+homepage="https://github.com/ROCm-Developer-Tools/clr"
+distfiles=" ${homepage}/archive/refs/tags/rocm-${version}.tar.gz>CLR-${version}.tar.gz
+ https://github.com/ROCm-Developer-Tools/HIP/archive/refs/tags/rocm-${version}.tar.gz>HIP-${version}.tar.gz"
+# https://github.com/ROCm-Developer-Tools/HIPCC/archive/refs/tags/rocm-${version}.tar.gz>HIPCC-${version}.tar.gz "
+checksum="0b88af1e99643899d11b1c8cf8a3c46601051b328a5e0ffbd44ee88b7eb0db33
+ 4b3c4dfcf8595da0e1b8c3e8067b1ccebeaac337762ff098db14375fa8dd4487"
+# d47d27ef2b5de7f49cdfd8547832ac9b437a32e6fc6f0e9c1646f4b704c90aee"
+subpackages="HIP"
+
+export CLR_DIR="${_clr_dir}"
+export HIP_DIR="${_hip_dir}"
+#export HIPCC_DIR="${_hipcc_dir}"
+#export HIP_CLANG_PATH=/usr/bin
+export ROCM_PATH=/usr
+
+#pre_configure() {
+#	cd "$HIPCC_DIR"
+#	mkdir -p build
+#	cd build
+#	cmake ..
+#	make
+#}
+
+post_install() {
+	vlicense ${_clr_dir}/LICENCE
+	vlicense ${_clr_dir}/hipamd/LICENSE.txt
+	vlicense ${_hip_dir}/LICENSE.txt
+#	vlicense ${_hipcc_dir}/LICENSE.txt
+}
+
+HIP_package() {
+	short_desc+="ROCm HIP Compiler "
+	depends="ROCm-clr>=${version}_${revision}"
+	pkg_install() {
+		vmove /usr/hip
+		vmove /usr/include/hip
+	}
+}
+

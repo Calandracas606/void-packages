@@ -1,0 +1,22 @@
+# Template file for 'rocminfo'
+pkgname=rocminfo
+version=5.6.1
+revision=1
+build_style=cmake
+configure_args=" -DROCRTST_BLD_TYPE=Release "
+#	-DCMAKE_INSTALL_PREFIX=/usr/lib/rocm
+#	-DCMAKE_PREFIX_PATH=/usr/lib/rocm
+#	-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=True
+#"
+hostmakedepends="ROCm-cmake pkg-config git"
+makedepends="ROCr-devel"
+short_desc="ROCm Info"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="NCSA"
+homepage="https://github.com/RadeonOpenCompute/rocminfo"
+distfiles="${homepage}/archive/refs/tags/rocm-${version}.tar.gz"
+checksum=780b186ac7410a503eca1060f4bbc35db1b7b4d1d714d15c7534cd26d8af7b54
+
+post_intall() {
+	vlicense License.txt
+}
