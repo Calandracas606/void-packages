@@ -1,0 +1,15 @@
+# Template file for 'intel-level-zero'
+pkgname=intel-level-zero
+version=1.15.1
+revision=1
+build_style=cmake
+short_desc="Intel oneAPI Level Zero"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="MIT"
+homepage="https://github.com/oneapi-src/level-zero"
+distfiles="https://github.com/oneapi-src/level-zero/archive/refs/tags/v${version}.tar.gz"
+checksum=aa96edb85a7953041baf8e7d0b0a0e10fa85673e52f5d0466bc2fc802beb9522
+
+post_install() {
+	vlicense LICENSE
+}
