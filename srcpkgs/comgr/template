@@ -11,7 +11,7 @@ build_style=cmake
 #make_install_args=""
 #conf_files=""
 #make_dirs="/var/log/dir 0755 root root"
-hostmakedepends="pkg-config xxd rocm-cmake hipcc perl"
+hostmakedepends="pkg-config xxd hipcc perl"
 makedepends="llvm-project-amd ROCr ROCt libnuma-devel elfutils-devel libdrm-devel libffi-devel libxml2-devel ncurses-libtinfo-devel ROCm-device-libs MesaLib-devel libedit-devel"
 #  llvm-project-amd
 #hostmakedepends="pkg-config"

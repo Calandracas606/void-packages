@@ -16,7 +16,7 @@ configure_args=" -DCLR_BUILD_HIP=ON
 #make_install_args=""
 #conf_files=""
 #make_dirs="/var/log/dir 0755 root root"
-hostmakedepends="pkg-config xxd rocm-cmake hipcc perl git python3 python3-cppheaderparser"
+hostmakedepends="pkg-config xxd hipcc perl git python3 python3-cppheaderparser"
 makedepends="ROCr ROCt comgr libnuma-devel elfutils-devel libdrm-devel libffi-devel libxml2-devel ncurses-libtinfo-devel llvm-project-amd ROCm-device-libs MesaLib-devel"
 #makedepends=""
 depends=""
