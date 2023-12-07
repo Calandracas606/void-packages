@@ -7,9 +7,9 @@ revision=1
 build_wrksrc=llvm
 build_style=cmake
 configure_args=" -DLLVM_ENABLE_PROJECTS=clang;lld;clang-tools-extra;compiler-rt
+	-DCMAKE_RELEASE_TYPE=Release -Wno-dev
 	-DLLVM_ENABLE_ASSERTIONS=ON 
 	-DLLVM_TARGETS_TO_BUILD=AMDGPU;X86
-	-DCLANG_DEFAULT_PIE_ON_LINUX=0
 	-DLLVM_ENABLE_BINDINGS=OFF 
 	-DLLVM_INCLUDE_BENCHMARKS=OFF
 	-DCLANG_DEFAULT_LINKER=lld
@@ -21,6 +21,7 @@ configure_args=" -DLLVM_ENABLE_PROJECTS=clang;lld;clang-tools-extra;compiler-rt
 	-DLIBCXX_ENABLE_STATIC=ON
 	-DLIBCXXABI_ENABLE_STATIC=ON
 "
+# -DCLANG_DEFAULT_PIE_ON_LINUX=0
 # -DCMAKE_INSTALL_PREFIX=$INSTALL_PROJECT 
 # -DCMAKE_BUILD_TYPE=$BUILD_TYPE 
 # -DLLVM_VERSION_SUFFIX=_AOMP${standalone_word}_$AOMP_VERSION_STRING 
@@ -32,8 +33,8 @@ configure_args=" -DLLVM_ENABLE_PROJECTS=clang;lld;clang-tools-extra;compiler-rt
 #make_install_args=""
 #conf_files=""
 #make_dirs="/var/log/dir 0755 root root"
-hostmakedepends="pkg-config"
-makedepends="llvm clang clang-tools-extra libffi-devel ncurses-libtinfo-devel zlib-devel libxml2-devel libzstd-devel"
+hostmakedepends="pkg-config perl python3"
+makedepends="libffi-devel ncurses-libtinfo-devel zlib-devel libxml2-devel libzstd-devel libedit-devel"
 #hostmakedepends="pkg-config git cmake which wget autoconf automake rpm cpio ninja xxd flex texinfo"
 #makedepends="pciutils-devel libnuma-devel libffi-devel python3-devel openmpi-devel MesaLib-devel libtool libdrm-devel gtest-devel libdwarf-devel elfutils-devel ncurses-libtinfo-devel libquadmath-devel python3-cppheaderparser python3-wheel python3-lxml python3-ply expat-devel gmp-devel mpfr-devel babeltrace-devel python-devel python3-pip"
 depends=""
@@ -46,10 +47,10 @@ homepage="https://github.com/RadeonOpenCompute/llvm-project"
 #distfiles="https://api.github.com/repos/RadeonOpenCompute/llvm-project/tarball/${commit}"
 #checksum=cd2cce4dbc37b9a68975b11f5cdf93ea3308268af004d30d346b39877150dc2c
 #https://github.com/RadeonOpenCompute/llvm-project/archive/refs/tags/rocm-5.7.1.tar.gz
-distfiles="https://github.com/RadeonOpenCompute/llvm-project/archive/refs/tags/rocm-${version}.tar.gz"
+distfiles="${homepage}/archive/refs/tags/rocm-${version}.tar.gz"
 checksum=6b54c422e45ad19c9bf5ab090ec21753e7f7d854ca78132c30eb146657b168eb
 python_version=3
-nopie_files="/usr/bin/amdllvm"
+#nopie_files="/usr/bin/amdllvm"
 
 #export CC=/usr/lib/aomp/bin/clang
 #export CXX=/usr/lib/aomp/bin/clang++
