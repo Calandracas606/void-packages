@@ -6,8 +6,10 @@ revision=1
 #build_wrksrc=llvm-project/amd/device-libs
 build_wrksrc=llvm
 build_style=cmake
-configure_args=" -DLLVM_ENABLE_PROJECTS=clang;lld;clang-tools-extra;compiler-rt
-	-DCMAKE_RELEASE_TYPE=Release -Wno-dev
+configure_args=" -DCMAKE_INSTALL_PREFIX=/usr/lib/rocm/llvm -Wno-dev
+	-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
+	-DLLVM_ENABLE_PROJECTS=clang;lld;clang-tools-extra;compiler-rt
+	-DCMAKE_RELEASE_TYPE=Release
 	-DLLVM_ENABLE_ASSERTIONS=ON 
 	-DLLVM_TARGETS_TO_BUILD=AMDGPU;X86
 	-DLLVM_ENABLE_BINDINGS=OFF 
