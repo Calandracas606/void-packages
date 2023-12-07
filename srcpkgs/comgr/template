@@ -6,13 +6,14 @@ revision=1
 #build_wrksrc=llvm-project/amd/comgr
 build_wrksrc=lib/comgr
 build_style=cmake
+configure_args=" -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -Wno-dev "
 #configure_args=""
 #make_build_args=""
 #make_install_args=""
 #conf_files=""
 #make_dirs="/var/log/dir 0755 root root"
-hostmakedepends="pkg-config xxd hipcc perl"
-makedepends="llvm-project-amd ROCr ROCt libnuma-devel elfutils-devel libdrm-devel libffi-devel libxml2-devel ncurses-libtinfo-devel ROCm-device-libs MesaLib-devel libedit-devel"
+hostmakedepends="llvm-project-amd ROCm-cmake pkg-config xxd hipcc perl"
+makedepends="ROCr ROCt libnuma-devel elfutils-devel libdrm-devel libffi-devel libxml2-devel ncurses-libtinfo-devel ROCm-device-libs MesaLib-devel libedit-devel"
 #  llvm-project-amd
 #hostmakedepends="pkg-config"
 #makedepends="ROCm-device-libs clang llvm"
