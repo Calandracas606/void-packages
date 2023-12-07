@@ -1,0 +1,16 @@
+# Template file for 'ROCm-cmake'
+pkgname=ROCm-cmake
+version=5.7.1
+revision=1
+build_style=cmake
+short_desc="Cmake modules for ROCm"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="MIT"
+homepage="https://github.com/RadeonOpenCompute/rocm-cmake"
+changelog="https://raw.githubusercontent.com/RadeonOpenCompute/rocm-cmake/rocm-${version}/CHANGELOG.md"
+distfiles="${homepage}/archive/refs/tags/rocm-${version}.tar.gz"
+checksum=4a4c6aa09576ccb834f869bdcb49e98cc0f0bac3678b802358065d1179a9d6f1
+
+post_install() {
+	vlicense LICENSE
+}
