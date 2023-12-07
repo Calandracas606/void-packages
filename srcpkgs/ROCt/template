@@ -3,7 +3,11 @@ pkgname=ROCt
 version=5.7.1
 revision=1
 build_style=cmake
-configure_args=" -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ "
+configure_args=" -DCMAKE_INSTALL_PREFIX=/usr/lib/rocm -Wno-dev
+	-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
+	-DCMAKE_C_COMPILER=/usr/lib/rocm/llvm/bin/clang
+	-DCMAKE_CXX_COMPILER=/usr/lib/rocm/llvm/bin/clang++
+"
 hostmakedepends="pkg-config ROCm-cmake llvm-project-amd"
 makedepends="libnuma-devel libdrm-devel"
 short_desc="ROCk API Interfaces"
