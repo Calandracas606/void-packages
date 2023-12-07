@@ -3,8 +3,11 @@ pkgname=rocminfo
 version=5.7.1
 revision=1
 build_style=cmake
-configure_args="-DROCRTST_BLD_TYPE=Release"
-hostmakedepends="pkg-config"
+configure_args=" -DROCRTST_BLD_TYPE=Release -Wno-dev
+	-DCMAKE_C_COMPILER=clang
+	-DCMAKE_CXX_COMPILER=clang++
+"
+hostmakedepends="llvm-project-amd ROCm-cmake pkg-config"
 makedepends="ROCm-device-libs ROCr"
 short_desc="ROCm Info"
 maintainer="Daniel Martinez <danielmartinez@cock.li>"
