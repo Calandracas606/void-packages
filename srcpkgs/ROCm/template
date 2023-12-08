@@ -17,23 +17,23 @@ _roctools="https://github.com/ROCm-Developer-Tools"
 _rocsw="https://github.com/ROCmSoftwarePlatform"
 _roc_rev="archive/refs/tags/rocm-${version}.tar.gz"
 distfiles=" ${_rocm}/aomp/archive/refs/tags/rel_${_aomp_version}.tar.gz
-	${_roc}/llvm-project/${_roc_rev}>llvm-project.tar.gz
-	${_rocm}/ROCm-Device-Libs/${_roc_rev}>ROCm-Device-Libs.tar.gz
-	${_rocm}/ROCm-CompilerSupport/${_roc_rev}>ROCm-CompilerSupport.tar.gz
-	${_rocm}/HIPCC/${_roc_rev}>HIPCC.tar.gz
-	${_roctools}/flang/${_roc_rev}>flang.tar.gz
-	${_roctools}/aomp-extras/${_roc_rev}>aomp-extras.tar.gz
-	${_roctools}/rocprofiler/${_roc_rev}>rocprofiler.tar.gz
-	${_roctools}/roctracer/${_roc_rev}>roctracer.tar.gz
-	${_roctools}/ROCdbgapi/${_roc_rev}>ROCdbgapi.tar.gz
-	${_roctools}/ROCgdb/${_roc_rev}>ROCgdb.tar.gz
-	${_roctools}/hip/${_roc_rev}>HIP.tar.gz
-	${_roctools}/clr/${_roc_rev}>clr.tar.gz
-	${_roc}/rocminfo/${_roc_rev}>rocminfo.tar.gz
-	${_roc}/rocm-cmake/${_roc_rev}>rocm-cmake.tar.gz
-	${_roc}/ROCR-Runtime/${_roc_rev}>ROCR-Runtime.tar.gz
-	${_roc}/ROCT-Thunk-Interface/${_roc_rev}>ROCT-Thunk-Interface.tar.gz
-	${_rocsw}/hipfort/${_roc_rev}>hipfort.tar.gz
+	${_roc}/llvm-project/${_roc_rev}>llvm-project-${version}.tar.gz
+	${_rocm}/ROCm-Device-Libs/${_roc_rev}>ROCm-Device-Libs-${version}.tar.gz
+	${_rocm}/ROCm-CompilerSupport/${_roc_rev}>ROCm-CompilerSupport-${version}.tar.gz
+	${_rocm}/HIPCC/${_roc_rev}>HIPCC-${version}.tar.gz
+	${_roctools}/flang/${_roc_rev}>flang-${version}.tar.gz
+	${_roctools}/aomp-extras/${_roc_rev}>aomp-extras-${version}.tar.gz
+	${_roctools}/rocprofiler/${_roc_rev}>rocprofiler-${version}.tar.gz
+	${_roctools}/roctracer/${_roc_rev}>roctracer-${version}.tar.gz
+	${_roctools}/ROCdbgapi/${_roc_rev}>ROCdbgapi-${version}.tar.gz
+	${_roctools}/ROCgdb/${_roc_rev}>ROCgdb-${version}.tar.gz
+	${_roctools}/hip/${_roc_rev}>HIP-${version}.tar.gz
+	${_roctools}/clr/${_roc_rev}>clr-${version}.tar.gz
+	${_roc}/rocminfo/${_roc_rev}>rocminfo-${version}.tar.gz
+	${_roc}/rocm-cmake/${_roc_rev}>rocm-cmake-${version}.tar.gz
+	${_roc}/ROCR-Runtime/${_roc_rev}>ROCR-Runtime-${version}.tar.gz
+	${_roc}/ROCT-Thunk-Interface/${_roc_rev}>ROCT-Thunk-Interface-${version}.tar.gz
+	${_rocsw}/hipfort/${_roc_rev}>hipfort-${version}.tar.gz
 "
 checksum="44f970c9b28ac35f301c6397afcda8385b9bd14d874e2e48ad3c7f6c63a883a6
  6b54c422e45ad19c9bf5ab090ec21753e7f7d854ca78132c30eb146657b168eb
