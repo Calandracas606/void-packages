@@ -1,0 +1,116 @@
+# Template file for 'ROCm'
+pkgname=ROCm
+version=5.6.1
+revision=1
+_aomp_version="18.0-0"
+build_style=gnu-makefile
+create_wrksrc="yes"
+hostmakedepends="cmake ninja pkg-config git which wget autoconf automake rpm cpio xxd flex texinfo"
+makedepends="pciutils-devel libnuma-devel libffi-devel python3-devel openmpi-devel MesaLib-devel libtool libdrm-devel gtest-devel libdwarf-devel elfutils-devel ncurses-libtinfo-devel libquadmath-devel python3-cppheaderparser python3-pip python3-wheel python3-lxml python3-ply expat-devel gmp-devel mpfr-devel babeltrace-devel python-devel libxml2-devel libedit-devel"
+short_desc="ROCm-Developer-Tools"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="Apache-2.0, MIT, NCSA"
+homepage="https://rocm.docs.amd.com"
+_rocm="https://github.com/ROCm"
+_roc="https://github.com/RadeonOpenCompute"
+_roctools="https://github.com/ROCm-Developer-Tools"
+_rocsw="https://github.com/ROCmSoftwarePlatform"
+_roc_rev="archive/refs/tags/rocm-${version}.tar.gz"
+_aomp_rev="archive/refs/tags/aomp-${_aomp_version}.tar.gz"
+#https://api.github.com/repos/OWNER/REPO/tarball/REF
+#	${_roc}/llvm-project/${_roc_rev}>llvm-project-${version}.tar.gz
+#	${_rocm}/ROCm-Device-Libs/${_roc_rev}>ROCm-Device-Libs-${version}.tar.gz
+#	${_rocm}/ROCm-CompilerSupport/${_roc_rev}>ROCm-CompilerSupport-${version}.tar.gz
+#	${_rocm}/HIPCC/${_roc_rev}>HIPCC-${version}.tar.gz
+distfiles=" ${_rocm}/aomp/archive/refs/tags/rel_${_aomp_version}.tar.gz
+	https://api.github.com/repos/ROCm/llvm-project/tarball/aomp-${_aomp_version}>llvm-project-aomp-${_aomp_version}.tar.gz
+	${_roctools}/flang/${_roc_rev}>flang-${version}.tar.gz
+	${_roctools}/aomp-extras/${_roc_rev}>aomp-extras-${version}.tar.gz
+	${_roctools}/rocprofiler/${_roc_rev}>rocprofiler-${version}.tar.gz
+	${_roctools}/roctracer/${_roc_rev}>roctracer-${version}.tar.gz
+	${_roctools}/ROCdbgapi/${_roc_rev}>ROCdbgapi-${version}.tar.gz
+	${_roctools}/ROCgdb/${_roc_rev}>ROCgdb-${version}.tar.gz
+	${_roctools}/hip/${_roc_rev}>HIP-${version}.tar.gz
+	${_roctools}/clr/${_roc_rev}>clr-${version}.tar.gz
+	${_roc}/rocminfo/${_roc_rev}>rocminfo-${version}.tar.gz
+	${_roc}/rocm-cmake/${_roc_rev}>rocm-cmake-${version}.tar.gz
+	${_roc}/ROCR-Runtime/${_roc_rev}>ROCR-Runtime-${version}.tar.gz
+	${_roc}/ROCT-Thunk-Interface/${_roc_rev}>ROCT-Thunk-Interface-${version}.tar.gz
+	${_rocsw}/hipfort/${_roc_rev}>hipfort-${version}.tar.gz
+"
+checksum="44f970c9b28ac35f301c6397afcda8385b9bd14d874e2e48ad3c7f6c63a883a6
+ f8f9eaf4d72de118c6e73b402a115edd62f787d9a8bd0b68d83373e6faa4ac49
+ 5ebcbca2e03bd0686e677f44ea551e97bd9395c6b119f832fa784818733aa652
+ 437e2017cfe2ab73b15ada0fc1ea88f794f0b108cc5410f457268ae7e4e8985a
+ 3e5eecce216418e61ffee893cbc8611e38305ee472d0e10d579eb74e287c8e1b
+ 007c498be25b067ad9a7631a2b0892f9129150ee9714e471a921225875d45e69
+ c7241bf94bdb97a4cf1befbf25b8c35720797710da6f6b5b9d6a4094c1bc9c8b
+ d2b40d4c5aa41a6ce2a84307627b30d16a458672e03e13f9d27c12f2dc3f21d6
+ 4b3c4dfcf8595da0e1b8c3e8067b1ccebeaac337762ff098db14375fa8dd4487
+ 0b88af1e99643899d11b1c8cf8a3c46601051b328a5e0ffbd44ee88b7eb0db33
+ 780b186ac7410a503eca1060f4bbc35db1b7b4d1d714d15c7534cd26d8af7b54
+ 98bf5fe2e6e12f55d122807d0060f1bb19c80d63d2c2f6fee579c40bfd244fa6
+ 4de9a57c2092edf9398d671c8a2c60626eb7daf358caf710da70d9c105490221
+ d60b355bfd21a08e0e36270fd56f98d052c3c6edca47da887fa32bf32759c29b
+ a55345cc9ccaf0cd69d306b8eb9ec2a02c220a57e9c396443cc7273aa3377adc"
+python_version=3
+nopie_files="${DESTDIR}/usr/lib/rocm_${_aomp_version}/bin/flang-legacy ${DESTDIR}/usr/lib/rocm_${_aomp_version}/bin/flang1 ${DESTDIR}/usr/lib/rocm_${_aomp_version}/bin/flang2 ${DESTDIR}/usr/lib/rocm_${_aomp_version}/bin/amdllvm"
+
+#export AOMP_APPLY_ROCM_PATCHES=No
+export ROCM_VERSION=${version}
+export AOMP=/usr/lib/rocm
+export AOMP_USE_NINJA=1
+export AOMP=/usr/lib/rocm
+export AOMP_BUILD_CUDA=0
+export AOMP_BUILD_DEBUG=0
+export AOMP_BUILD_PERF=0
+
+post_extract() {
+#	mv llvm-project-rocm-${version} llvm-project
+	mv ROCm-llvm-project* llvm-project
+#	mkdir llvm-project/amd
+#	mv ROCm-Device-Libs-rocm-${version} llvm-project/amd/device-libs
+#	cp llvm-project/amd/device-libs/oclc/inc/oclc.h llvm-project/openmp/libomptarget/hostexec/src
+
+#	mv ROCm-CompilerSupport-rocm-${version}/lib/comgr llvm-project/amd/comgr
+#	rm -r ROCm-CompilerSupport-rocm-${version}
+
+#	mv HIPCC-rocm-${version} llvm-project/amd/hipcc
+
+	mv flang-rocm-${version} flang
+	mv aomp-extras-rocm-${version} aomp-extras
+	mv rocprofiler-rocm-${version} rocprofiler
+	mv roctracer-rocm-${version} roctracer
+	mv ROCdbgapi-rocm-${version} ROCdbgapi
+	mv ROCgdb-rocm-${version} ROCgdb
+	mv HIP-rocm-${version} hip
+	mv clr-rocm-${version} clr
+	mv rocminfo-rocm-${version} rocminfo
+	mv rocm-cmake-rocm-${version} rocm-cmake
+	mv ROCR-Runtime-rocm-${version} rocr-runtime
+	mv ROCT-Thunk-Interface-rocm-${version} roct-thunk-interface
+	mv hipfort-rocm-${version} hipfort
+	mv aomp-rel_${_aomp_version} aomp
+
+	mv aomp/Makefile .
+
+
+	vsed -e "s/-DLLVM_ENABLE_ASSERTIONS=ON//g" \
+		-i aomp/bin/build_flang-legacy.sh \
+		-i aomp/bin/build_pgmath.sh \
+		-i aomp/bin/build_flang_runtime.sh \
+		-i aomp/bin/build_project.sh \
+		-i aomp/bin/build_flang.sh
+
+#	vsed -e "s/5.6.x/5.7.1/g" -i aomp/bin/build_supp.sh
+}
+
+do_install() {
+
+#	for licence in $(find . -iregex ".*license.*");
+#		do vlicense $lisence;
+#	done
+
+	vmkdir usr/lib
+	vcopy "/usr/lib/rocm*" /usr/lib
+}
