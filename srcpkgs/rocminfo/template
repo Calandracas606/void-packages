@@ -7,15 +7,7 @@ configure_args=" -DROCRTST_BLD_TYPE=Release
 	-DCMAKE_INSTALL_PREFIX=/usr/lib/rocm
 	-DCMAKE_PREFIX_PATH=/usr/lib/rocm
 "
-#configure_args=" -DROCRTST_BLD_TYPE=Release -Wno-dev
-#	-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
-#	-DCMAKE_INSTALL_PREFIX=/usr/lib/rocm
-#	-DCMAKE_C_COMPILER=/usr/lib/rocm/llvm/bin/clang
-#	-DCMAKE_CXX_COMPILER=/usr/lib/rocm/llvm/bin/clang++
-#"
-#hostmakedepends="llvm-project-amd ROCm-cmake pkg-config"
 hostmakedepends="ROCm-cmake pkg-config"
-#makedepends="ROCm-device-libs ROCr"
 makedepends="ROCr"
 short_desc="ROCm Info"
 maintainer="Daniel Martinez <danielmartinez@cock.li>"
@@ -23,3 +15,7 @@ license="NCSA"
 homepage="https://github.com/RadeonOpenCompute/rocminfo"
 distfiles="${homepage}/archive/refs/tags/rocm-${version}.tar.gz"
 checksum=780b186ac7410a503eca1060f4bbc35db1b7b4d1d714d15c7534cd26d8af7b54
+
+post_intall() {
+	vlicense License.txt
+}
