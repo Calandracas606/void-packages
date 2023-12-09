@@ -2,11 +2,8 @@
 pkgname=llvm-project-amd
 version=5.6.1
 revision=1
-#archs="i686 x86_64"
-#build_wrksrc=llvm-project/amd/device-libs
 build_wrksrc=llvm
 build_style=cmake
-#-DCMAKE_INSTALL_PREFIX=/usr/lib/rocm/llvm -Wno-dev -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
 configure_args=" 
 	-DCMAKE_INSTALL_PREFIX=/usr/lib/rocm/llvm
 	-DCMAKE_PREFIX_PATH=/usr/lib/rocm
@@ -26,45 +23,17 @@ configure_args="
 	-DLIBCXX_ENABLE_STATIC=ON
 	-DLIBCXXABI_ENABLE_STATIC=ON
 "
-# -DCLANG_DEFAULT_PIE_ON_LINUX=0
-# -DCMAKE_INSTALL_PREFIX=$INSTALL_PROJECT 
-# -DCMAKE_BUILD_TYPE=$BUILD_TYPE 
-# -DLLVM_VERSION_SUFFIX=_AOMP${standalone_word}_$AOMP_VERSION_STRING 
-# -DCLANG_VENDOR=AOMP${standalone_word}_$AOMP_VERSION_STRING 
-# -DBUG_REPORT_URL='https://github.com/ROCm-Developer-Tools/aomp' 
- 
-
-#make_build_args=""
-#make_install_args=""
-#conf_files=""
-#make_dirs="/var/log/dir 0755 root root"
-hostmakedepends="pkg-config perl python3 ROCm-cmake"
+hostmakedepends="pkg-config git python3 ROCm-cmake"
 makedepends="libffi-devel ncurses-libtinfo-devel zlib-devel libxml2-devel libzstd-devel libedit-devel"
-#hostmakedepends="pkg-config git cmake which wget autoconf automake rpm cpio ninja xxd flex texinfo"
-#makedepends="pciutils-devel libnuma-devel libffi-devel python3-devel openmpi-devel MesaLib-devel libtool libdrm-devel gtest-devel libdwarf-devel elfutils-devel ncurses-libtinfo-devel libquadmath-devel python3-cppheaderparser python3-wheel python3-lxml python3-ply expat-devel gmp-devel mpfr-devel babeltrace-devel python-devel python3-pip"
 depends=""
 short_desc="LLVM Project for ROCm"
 maintainer="Daniel Martinez <danielmartinez@airmail.cc>"
 license="MIT"
 homepage="https://github.com/RadeonOpenCompute/llvm-project"
-#changelog=""
-#commit=25f6cac00c0cc1ea7a4a075de983d6674ff18494
-#distfiles="https://api.github.com/repos/RadeonOpenCompute/llvm-project/tarball/${commit}"
-#checksum=cd2cce4dbc37b9a68975b11f5cdf93ea3308268af004d30d346b39877150dc2c
-#https://github.com/RadeonOpenCompute/llvm-project/archive/refs/tags/rocm-5.7.1.tar.gz
 distfiles="${homepage}/archive/refs/tags/rocm-${version}.tar.gz"
 checksum=045e43c0c4a3f4f2f1db9fb603a4f1ea3d56e128147e19ba17909eb57d7f08e5
 python_version=3
-#nopie_files="/usr/bin/amdllvm"
 
-#export CC=/usr/lib/aomp/bin/clang
-#export CXX=/usr/lib/aomp/bin/clang++
-
-#do_extract() {
-#	bsdtar xf ${XBPS_SRCDISTDIR}/${pkgname}-${version}/${commit}
+#llvm-project-amd-devel_package() {
+#	short_desc+=" - development files"
 #}
-
-#post_extract() {
-#	mv * llvm-project
-#}
-
