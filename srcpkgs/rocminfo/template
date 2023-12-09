@@ -1,19 +1,25 @@
 # Template file for 'rocminfo'
 pkgname=rocminfo
-version=5.7.1
+version=5.6.1
 revision=1
 build_style=cmake
-configure_args=" -DROCRTST_BLD_TYPE=Release -Wno-dev
-	-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
+configure_args=" -DROCRTST_BLD_TYPE=Release
 	-DCMAKE_INSTALL_PREFIX=/usr/lib/rocm
-	-DCMAKE_C_COMPILER=/usr/lib/rocm/llvm/bin/clang
-	-DCMAKE_CXX_COMPILER=/usr/lib/rocm/llvm/bin/clang++
+	-DCMAKE_PREFIX_PATH=/usr/lib/rocm
 "
-hostmakedepends="llvm-project-amd ROCm-cmake pkg-config"
-makedepends="ROCm-device-libs ROCr"
+#configure_args=" -DROCRTST_BLD_TYPE=Release -Wno-dev
+#	-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
+#	-DCMAKE_INSTALL_PREFIX=/usr/lib/rocm
+#	-DCMAKE_C_COMPILER=/usr/lib/rocm/llvm/bin/clang
+#	-DCMAKE_CXX_COMPILER=/usr/lib/rocm/llvm/bin/clang++
+#"
+#hostmakedepends="llvm-project-amd ROCm-cmake pkg-config"
+hostmakedepends="ROCm-cmake pkg-config"
+#makedepends="ROCm-device-libs ROCr"
+makedepends="ROCr"
 short_desc="ROCm Info"
 maintainer="Daniel Martinez <danielmartinez@cock.li>"
 license="NCSA"
 homepage="https://github.com/RadeonOpenCompute/rocminfo"
 distfiles="${homepage}/archive/refs/tags/rocm-${version}.tar.gz"
-checksum=642dc2ec4254b3c30c43064e6690861486db820b25f4906ec78bdb47e68dcd0b
+checksum=780b186ac7410a503eca1060f4bbc35db1b7b4d1d714d15c7534cd26d8af7b54

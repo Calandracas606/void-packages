@@ -1,16 +1,19 @@
 # Template file for 'llvm-project-amd'
 pkgname=llvm-project-amd
-version=5.7.1
+version=5.6.1
 revision=1
 #archs="i686 x86_64"
 #build_wrksrc=llvm-project/amd/device-libs
 build_wrksrc=llvm
 build_style=cmake
-configure_args=" -DCMAKE_INSTALL_PREFIX=/usr/lib/rocm/llvm -Wno-dev
-	-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
+#-DCMAKE_INSTALL_PREFIX=/usr/lib/rocm/llvm -Wno-dev -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
+configure_args=" 
+	-DCMAKE_INSTALL_PREFIX=/usr/lib/rocm/llvm
+	-DCMAKE_PREFIX_PATH=/usr/lib/rocm
 	-DLLVM_ENABLE_PROJECTS=clang;lld;clang-tools-extra;compiler-rt
+	-DCMAKE_BUILD_TYPE=Release
 	-DCMAKE_RELEASE_TYPE=Release
-	-DLLVM_ENABLE_ASSERTIONS=ON 
+	-DLLVM_ENABLE_ASSERTIONS=ON
 	-DLLVM_TARGETS_TO_BUILD=AMDGPU;X86
 	-DLLVM_ENABLE_BINDINGS=OFF 
 	-DLLVM_INCLUDE_BENCHMARKS=OFF
@@ -35,7 +38,7 @@ configure_args=" -DCMAKE_INSTALL_PREFIX=/usr/lib/rocm/llvm -Wno-dev
 #make_install_args=""
 #conf_files=""
 #make_dirs="/var/log/dir 0755 root root"
-hostmakedepends="pkg-config perl python3"
+hostmakedepends="pkg-config perl python3 ROCm-cmake"
 makedepends="libffi-devel ncurses-libtinfo-devel zlib-devel libxml2-devel libzstd-devel libedit-devel"
 #hostmakedepends="pkg-config git cmake which wget autoconf automake rpm cpio ninja xxd flex texinfo"
 #makedepends="pciutils-devel libnuma-devel libffi-devel python3-devel openmpi-devel MesaLib-devel libtool libdrm-devel gtest-devel libdwarf-devel elfutils-devel ncurses-libtinfo-devel libquadmath-devel python3-cppheaderparser python3-wheel python3-lxml python3-ply expat-devel gmp-devel mpfr-devel babeltrace-devel python-devel python3-pip"
@@ -50,7 +53,7 @@ homepage="https://github.com/RadeonOpenCompute/llvm-project"
 #checksum=cd2cce4dbc37b9a68975b11f5cdf93ea3308268af004d30d346b39877150dc2c
 #https://github.com/RadeonOpenCompute/llvm-project/archive/refs/tags/rocm-5.7.1.tar.gz
 distfiles="${homepage}/archive/refs/tags/rocm-${version}.tar.gz"
-checksum=6b54c422e45ad19c9bf5ab090ec21753e7f7d854ca78132c30eb146657b168eb
+checksum=045e43c0c4a3f4f2f1db9fb603a4f1ea3d56e128147e19ba17909eb57d7f08e5
 python_version=3
 #nopie_files="/usr/bin/amdllvm"
 

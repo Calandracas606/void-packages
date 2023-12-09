@@ -1,6 +1,6 @@
 # Template file for 'ROCm-clr'
 pkgname=ROCm-clr
-version=5.7.1
+version=5.6.1
 revision=1
 #archs="i686 x86_64"
 build_wrksrc=clr-rocm-${version}
@@ -9,24 +9,29 @@ build_style=cmake
 _clr_dir=${XBPS_BUILDDIR}/${pkgname}-${version}/clr-rocm-${version}
 _hip_dir=${XBPS_BUILDDIR}/${pkgname}-${version}/HIP-rocm-${version}
 _hipcc_dir=${XBPS_BUILDDIR}/${pkgname}-${version}/HIPCC-rocm-${version}
-configure_args=" -DCMAKE_PREFIX_PATH=/usr/lib/rocm -Wno-dev
-	-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
+#configure_args=" -DCMAKE_PREFIX_PATH=/usr/lib/rocm -Wno-dev
+#	-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
+#	-DCMAKE_INSTALL_PREFIX=/usr/lib/rocm
+configure_args="
+	-DCMAKE_PREFIX_PATH=/usr/lib/rocm;/usr/lib/rocm/llvm
 	-DCMAKE_INSTALL_PREFIX=/usr/lib/rocm
 	-DCLR_BUILD_HIP=ON
-	-DROCM_PATH=/usr/lib/rocm
-	-DCMAKE_C_COMPILER=/usr/lib/rocm/llvm/bin/clang
-	-DCMAKE_CXX_COMPILER=/usr/lib/rocm/llvm/bin/clang++
 	-DHIP_COMMON_DIR=$_hip_dir
 	-DHIPCC_BIN_DIR=$_hipcc_dir/build
 "
+# -DBUILD_SHARED_LIBS=False
+# -DCMAKE_C_COMPILER=clang
+# -DCMAKE_CXX_COMPILER=clang++
 # -D__HIP_ENABLE_PCH=No
 #-${version}/${_pkg}/kernel"
 #make_build_args=""
 #make_install_args=""
 #conf_files=""
 #make_dirs="/var/log/dir 0755 root root"
-hostmakedepends="llvm-project-amd ROCm-cmake pkg-config xxd perl git python3 python3-cppheaderparser"
-makedepends="ROCr ROCt comgr libnuma-devel elfutils-devel libdrm-devel libffi-devel libxml2-devel ncurses-libtinfo-devel MesaLib-devel"
+hostmakedepends="llvm-project-amd ROCm-cmake pkg-config xxd perl python3 python3-cppheaderparser"
+#makedepends="ROCr ROCt comgr libnuma-devel elfutils-devel libdrm-devel libffi-devel libxml2-devel ncurses-libtinfo-devel MesaLib-devel"
+makedepends="ROCr comgr libnuma-devel MesaLib-devel ncurses-libtinfo-devel libxml2-devel libzstd-devel"
+#libffi-devel  libX11-devel"
 #makedepends=""
 depends=""
 short_desc="AMD CLR - Compute Language Runtimes"
@@ -38,14 +43,15 @@ homepage="https://github.com/ROCm-Developer-Tools/clr"
 #checksum=c78490335233a11b4d8a5426ace7417c555f5e2325de10422df06c0f0f00f7eb
 #distfiles="https://github.com/ROCm-Developer-Tools/HIP/archive/refs/tags/rocm-${version}.tar.gz"
 #checksum=c78490335233a11b4d8a5426ace7417c555f5e2325de10422df06c0f0f00f7eb
-distfiles="${homepage}/archive/refs/tags/rocm-${version}.tar.gz>CLR.tar.gz https://github.com/ROCm-Developer-Tools/HIP/archive/refs/tags/rocm-${version}.tar.gz>HIP.tar.gz https://github.com/ROCm-Developer-Tools/HIPCC/archive/refs/tags/rocm-${version}.tar.gz>HIPCC.tar.gz"
-checksum="c78490335233a11b4d8a5426ace7417c555f5e2325de10422df06c0f0f00f7eb
- eaa0e14a9ae45c58ed37863797b683a7778b3cbbf92f5b6529ec65fd61d61f3e
- d47d27ef2b5de7f49cdfd8547832ac9b437a32e6fc6f0e9c1646f4b704c90aee"
+distfiles="${homepage}/archive/refs/tags/rocm-${version}.tar.gz>CLR-${version}.tar.gz https://github.com/ROCm-Developer-Tools/HIP/archive/refs/tags/rocm-${version}.tar.gz>HIP-${version}.tar.gz https://github.com/ROCm-Developer-Tools/HIPCC/archive/refs/tags/rocm-${version}.tar.gz>HIPCC-${version}.tar.gz"
+checksum="0b88af1e99643899d11b1c8cf8a3c46601051b328a5e0ffbd44ee88b7eb0db33
+ 4b3c4dfcf8595da0e1b8c3e8067b1ccebeaac337762ff098db14375fa8dd4487
+ 5800fac92b841ef6f52acda78d9bf86f83970bec0fb848a6265d239bdb7eb51a"
 
 export CLR_DIR="${_clr_dir}"
 export HIP_DIR="${_hip_dir}"
 export HIPCC_DIR="${_hipcc_dir}"
+export HIP_CLANG_PATH=/usr/lib/rocm/llvm/bin
 export ROCM_PATH=/usr/lib/rocm
 
 pre_configure() {
