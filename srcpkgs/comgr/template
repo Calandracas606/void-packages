@@ -22,7 +22,7 @@ configure_args=" -DCMAKE_INSTALL_PREFIX=/usr/lib/rocm
 hostmakedepends="llvm-project-amd ROCm-cmake pkg-config xxd perl"
 #makedepends="ROCr ROCt elfutils-devel libdrm-devel libffi-devel libxml2-devel ncurses-libtinfo-devel ROCm-device-libs MesaLib-devel libedit-devel"
 #makedepends="ROCr ROCt elfutils-devel libdrm-devel libffi-devel libxml2-devel ncurses-libtinfo-devel ROCm-device-libs MesaLib-devel libedit-devel"
-makedepends="ROCr ROCt ROCm-device-libs libffi-devel ncurses-libtinfo-devel libxml2-devel libzstd-devel"
+makedepends="llvm-project-amd-devel ROCr ROCt ROCm-device-libs libffi-devel ncurses-libtinfo-devel libxml2-devel libzstd-devel"
 depends=""
 short_desc="ROCm Compiler Support"
 maintainer="Daniel Martinez <danielmartinez@cock.li>"
@@ -33,3 +33,14 @@ homepage="https://github.com/RadeonOpenCompute/ROCm-CompilerSupport"
 #checksum=8b8fb2b513130dc96f082d78545397460a5e3cc80a0a7f9efafd9e0d63845ce4
 distfiles="${homepage}/archive/refs/tags/rocm-${version}.tar.gz"
 checksum=0a85d84619f98be26ca7a32c71f94ed3c4e9866133789eabb451be64ce739300
+
+#subpackages="comgr-devel"
+
+#comgr-devel_package() {
+#	short_desc+=" - development files"
+#	depends="comgr>=${version}_${revision}"
+#	pkg_install() {
+#		vmove /usr/lib/rocm/include
+#		vmove /usr/lib/rocm/lib64/cmake
+#	}
+#}
