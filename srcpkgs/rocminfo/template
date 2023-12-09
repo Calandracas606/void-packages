@@ -8,7 +8,7 @@ configure_args=" -DROCRTST_BLD_TYPE=Release
 	-DCMAKE_PREFIX_PATH=/usr/lib/rocm
 "
 hostmakedepends="ROCm-cmake pkg-config"
-makedepends="ROCr"
+makedepends="ROCr-devel"
 short_desc="ROCm Info"
 maintainer="Daniel Martinez <danielmartinez@cock.li>"
 license="NCSA"
