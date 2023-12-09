@@ -4281,3 +4281,4 @@ libamd_comgr.so.2 comgr-5.6.1_1
 libhsa-runtime64.so.1 ROCr-5.6.1_1
 libhiprtc.so.5 ROCm-clr-5.6.1_1
 libamdhip64.so.5 ROCm-clr-5.6.1_1
+libze_loader.so.1 intel-level-zero-1.15.1_1
