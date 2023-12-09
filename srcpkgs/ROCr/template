@@ -17,7 +17,7 @@ configure_args=" -DCMAKE_INSTALL_PREFIX=/usr/lib/rocm
 #hostmakedepends="llvm-project-amd ROCm-cmake pkg-config xxd"
 #makedepends="ROCt ROCm-device-libs libnuma-devel elfutils-devel libdrm-devel libffi-devel libxml2-devel ncurses-libtinfo-devel libedit-devel"
 hostmakedepends="ROCm-cmake pkg-config xxd llvm-project-amd"
-makedepends="ROCt ROCm-device-libs libnuma-devel elfutils-devel libdrm-devel libffi-devel libxml2-devel ncurses-libtinfo-devel libedit-devel"
+makedepends="llvm-project-amd-devel ROCt ROCm-device-libs libnuma-devel elfutils-devel libdrm-devel libffi-devel libxml2-devel ncurses-libtinfo-devel libedit-devel"
 depends=""
 short_desc="HSA Runtime API and runtime for ROCm"
 maintainer="Daniel Martinez <danielmartinez@cock.li>"
@@ -29,3 +29,14 @@ distfiles="https://github.com/RadeonOpenCompute/ROCR-Runtime/archive/refs/tags/r
 checksum=4de9a57c2092edf9398d671c8a2c60626eb7daf358caf710da70d9c105490221
 #distfiles="https://github.com/ROCm-Developer-Tools/aomp/releases/download/rel_18.0-0/aomp-18.0-0.tar.gz"
 #checksum=8b8fb2b513130dc96f082d78545397460a5e3cc80a0a7f9efafd9e0d63845ce4
+subpackages="ROCr-devel"
+
+ROCr-devel_package() {
+	short_desc+=" - development files"
+	depends="ROCr>=${version}_${revision}"
+	pkg_install() {
+		vmove /usr/lib/rocm/hsa
+		vmove /usr/lib/rocm/include
+		vmove /usr/lib/rocm/lib64/cmake
+	}
+}
