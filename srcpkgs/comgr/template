@@ -34,13 +34,13 @@ homepage="https://github.com/RadeonOpenCompute/ROCm-CompilerSupport"
 distfiles="${homepage}/archive/refs/tags/rocm-${version}.tar.gz"
 checksum=0a85d84619f98be26ca7a32c71f94ed3c4e9866133789eabb451be64ce739300
 
-#subpackages="comgr-devel"
+subpackages="comgr-devel"
 
-#comgr-devel_package() {
-#	short_desc+=" - development files"
-#	depends="comgr>=${version}_${revision}"
-#	pkg_install() {
-#		vmove /usr/lib/rocm/include
+comgr-devel_package() {
+	short_desc+=" - development files"
+	depends="comgr>=${version}_${revision}"
+	pkg_install() {
+		vmove /usr/lib/rocm/include
 #		vmove /usr/lib/rocm/lib64/cmake
-#	}
-#}
+	}
+}
