@@ -15,9 +15,9 @@ configure_args="
 # -DCMAKE_PREFIX_PATH=/usr/lib/rocm
 # -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=True
 conf_files="/etc/hipSYCL/syclcc.json"
-hostmakedepends="rocminfo clang lld pkg-config git doxygen"
+hostmakedepends="rocminfo clang lld pkg-config git doxygen jq"
 makedepends="ROCr-devel ROCt ROCm-clr HIP ROCm-device-libs llvm lld-devel zlib-devel boost-devel libzstd-devel libffi-devel libxml2-devel ncurses-devel libedit-devel ocl-icd-devel libomp-devel SPIRV-Tools-devel tbb-devel intel-level-zero"
-depends="ROCm-device-libs ROCt rocminfo llvm clang lld-devel libomp-devel ocl-icd"
+depends="ROCm-device-libs ROCt comgr-devel rocminfo llvm clang lld-devel libomp-devel ocl-icd"
 short_desc="SYCL Implementation"
 maintainer="Daniel Martinez <danielmartinez@cock.li>"
 license="BSD-2-Clause"
@@ -28,4 +28,6 @@ checksum=9ac3567c048a848f4e6eadb15b09750357ae399896e802b2f1dcaecf8a090064
 post_install() {
 	vlicense LICENSE
 	mv ${DESTDIR}/usr/etc ${DESTDIR}
+	jq '."default-cpu-cxx"="/usr/bin/clang++" | ."default-targets"="omp;generic"' ${DESTDIR}/etc/hipSYCL/syclcc.json
+	#> ${DESTDIR}/etc/hipSYCL/syclcc.json
 }
