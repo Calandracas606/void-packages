@@ -22,12 +22,14 @@ short_desc="SYCL Implementation"
 maintainer="Daniel Martinez <danielmartinez@cock.li>"
 license="BSD-2-Clause"
 homepage="https://adaptivecpp.github.io"
-distfiles="https://github.com/AdaptiveCpp/AdaptiveCpp/archive/refs/tags/v${version}.tar.gz"
-checksum=9ac3567c048a848f4e6eadb15b09750357ae399896e802b2f1dcaecf8a090064
+#distfiles="https://github.com/AdaptiveCpp/AdaptiveCpp/archive/refs/tags/v${version}.tar.gz"
+#checksum=9ac3567c048a848f4e6eadb15b09750357ae399896e802b2f1dcaecf8a090064
+distfiles="https://api.github.com/repos/AdaptiveCpp/AdaptiveCpp/tarball>AdaptiveCpp-git.tar.gz"
+checksum=51e429673ab35429b81bac40a94366e6729db43febbe7077016597638ed560d4
 
 post_install() {
 	vlicense LICENSE
+	vmkdir /usr/etc
 	mv ${DESTDIR}/usr/etc ${DESTDIR}
-	jq '."default-cpu-cxx"="/usr/bin/clang++" | ."default-targets"="omp;generic"' ${DESTDIR}/etc/hipSYCL/syclcc.json
-	#> ${DESTDIR}/etc/hipSYCL/syclcc.json
+#	jq '."default-cpu-cxx"="/usr/bin/clang++" | ."default-targets"="omp;generic"' ${DESTDIR}/etc/hipSYCL/syclcc.json > ${DESTDIR}/etc/hipSYCL/syclcc.json
 }
