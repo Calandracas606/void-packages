@@ -9,13 +9,10 @@ build_style=cmake
 _clr_dir=${XBPS_BUILDDIR}/${pkgname}-${version}/clr-rocm-${version}
 _hip_dir=${XBPS_BUILDDIR}/${pkgname}-${version}/HIP-rocm-${version}
 _hipcc_dir=${XBPS_BUILDDIR}/${pkgname}-${version}/HIPCC-rocm-${version}
-configure_args=" -DCMAKE_PREFIX_PATH=/usr/lib/rocm -Wno-dev
-	-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
-	-DCMAKE_INSTALL_PREFIX=/usr/lib/rocm
-	-DCLR_BUILD_HIP=ON
-	-DROCM_PATH=/usr/lib/rocm
-	-DCMAKE_C_COMPILER=/usr/lib/rocm/llvm/bin/clang
-	-DCMAKE_CXX_COMPILER=/usr/lib/rocm/llvm/bin/clang++
+configure_args=" -DCLR_BUILD_HIP=ON -Wno-dev
+	-DROCM_PATH=/usr
+	-DCMAKE_C_COMPILER=clang
+	-DCMAKE_CXX_COMPILER=clang++
 	-DHIP_COMMON_DIR=$_hip_dir
 	-DHIPCC_BIN_DIR=$_hipcc_dir/build
 "
@@ -46,7 +43,6 @@ checksum="c78490335233a11b4d8a5426ace7417c555f5e2325de10422df06c0f0f00f7eb
 export CLR_DIR="${_clr_dir}"
 export HIP_DIR="${_hip_dir}"
 export HIPCC_DIR="${_hipcc_dir}"
-export ROCM_PATH=/usr/lib/rocm
 
 pre_configure() {
 	cd "$HIPCC_DIR"

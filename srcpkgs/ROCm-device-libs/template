@@ -5,11 +5,7 @@ revision=1
 #archs="i686 x86_64"
 #build_wrksrc=amd/device-libs
 build_style=cmake
-configure_args=" -DCMAKE_INSTALL_PREFIX=/usr/lib/rocm -Wno-dev
-	-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
-	-DCMAKE_C_COMPILER=/usr/lib/rocm/llvm/bin/clang
-	-DCMAKE_CXX_COMPILER=/usr/lib/rocm/llvm/bin/clang++
-"
+configure_args=" -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -Wno-dev "
 #configure_args="-DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++"
 #make_build_args=""
 #make_install_args=""
