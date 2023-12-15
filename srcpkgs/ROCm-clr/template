@@ -16,7 +16,7 @@ configure_args="
 	-DHIPCC_BIN_DIR=$_hipcc_dir/build
 "
 hostmakedepends="llvm-project-amd ROCm-cmake pkg-config xxd git python3-cppheaderparser"
-makedepends="llvm-project-amd-devel ROCr-devel comgr-devel libnuma-devel MesaLib-devel ncurses-libtinfo-devel libxml2-devel libzstd-devel"
+makedepends="llvm-project-amd-devel ROCr-devel comgr libnuma-devel MesaLib-devel ncurses-libtinfo-devel libxml2-devel libzstd-devel"
 short_desc="AMD CLR - Compute Language Runtimes"
 maintainer="Daniel Martinez <danielmartinez@cock.li>"
 license="MIT"
