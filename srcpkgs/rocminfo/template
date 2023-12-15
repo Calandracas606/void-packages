@@ -4,10 +4,8 @@ version=5.7.1
 revision=1
 build_style=cmake
 configure_args=" -DROCRTST_BLD_TYPE=Release -Wno-dev
-	-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
-	-DCMAKE_INSTALL_PREFIX=/usr/lib/rocm
-	-DCMAKE_C_COMPILER=/usr/lib/rocm/llvm/bin/clang
-	-DCMAKE_CXX_COMPILER=/usr/lib/rocm/llvm/bin/clang++
+	-DCMAKE_C_COMPILER=clang
+	-DCMAKE_CXX_COMPILER=clang++
 "
 hostmakedepends="llvm-project-amd ROCm-cmake pkg-config"
 makedepends="ROCm-device-libs ROCr"
