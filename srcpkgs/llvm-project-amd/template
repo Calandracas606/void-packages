@@ -33,24 +33,7 @@ homepage="https://github.com/RadeonOpenCompute/llvm-project"
 distfiles="${homepage}/archive/refs/tags/rocm-${version}.tar.gz"
 checksum=045e43c0c4a3f4f2f1db9fb603a4f1ea3d56e128147e19ba17909eb57d7f08e5
 python_version=3
-subpackages="llvm-project-amd-devel"
 
-_llvm_version=16.0.0
-
-llvm-project-amd-devel_package() {
-	short_desc+=" - development files"
-	depends="llvm-project-amd>=${version}_${revision}"
-	pkg_install() {
-		vmove usr/lib/rocm/llvm/include
-		vmove usr/lib/rocm/llvm/lib/cmake
-		vmove "usr/lib/rocm/llvm/lib/*.a"
-		vmove "/usr/lib/rocm/llvm/lib/clang/${_llvm_version}/include"
-		vmove "/usr/lib/rocm/llvm/lib/clang/${_llvm_version}/lib/linux/*.a"
-		vmove "/usr/lib/rocm/llvm/lib/clang/${_llvm_version}/lib/linux/*.a.syms"
-		vmove "/usr/lib/rocm/llvm/lib/clang/${_llvm_version}/lib/linux/*.o"
-		vmove "/usr/lib/rocm/llvm/lib/clang/${_llvm_version}/share"
-		vmove /usr/lib/rocm/llvm/share
-		vmove /usr/lib/rocm/llvm/lib/libscanbuild
-		vmove /usr/lib/rocm/llvm/lib/libear
-	}
-}
+#llvm-project-amd-devel_package() {
+#	short_desc+=" - development files"
+#}

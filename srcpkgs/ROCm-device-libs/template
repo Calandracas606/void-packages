@@ -18,7 +18,7 @@ configure_args=" -DCMAKE_INSTALL_PREFIX=/usr/lib/rocm
 #conf_files=""
 #make_dirs="/var/log/dir 0755 root root"
 hostmakedepends="pkg-config ROCm-cmake llvm-project-amd"
-makedepends="llvm-project-amd-devel libffi-devel ncurses-libtinfo-devel zlib-devel libxml2-devel libzstd-devel"
+makedepends="libffi-devel ncurses-libtinfo-devel zlib-devel libxml2-devel libzstd-devel"
 depends=""
 short_desc="ROCm Device Libraries"
 maintainer="Daniel Martinez <danielmartinez@airmail.cc>"

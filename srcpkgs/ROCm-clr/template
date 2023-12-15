@@ -15,8 +15,8 @@ configure_args="
 	-DHIP_COMMON_DIR=$_hip_dir
 	-DHIPCC_BIN_DIR=$_hipcc_dir/build
 "
-hostmakedepends="llvm-project-amd ROCm-cmake pkg-config xxd git python3-cppheaderparser"
-makedepends="llvm-project-amd-devel ROCr-devel comgr libnuma-devel MesaLib-devel ncurses-libtinfo-devel libxml2-devel libzstd-devel"
+hostmakedepends="llvm-project-amd ROCm-cmake pkg-config xxd perl python3 python3-cppheaderparser"
+makedepends="ROCr comgr libnuma-devel MesaLib-devel ncurses-libtinfo-devel libxml2-devel libzstd-devel"
 short_desc="AMD CLR - Compute Language Runtimes"
 maintainer="Daniel Martinez <danielmartinez@cock.li>"
 license="MIT"
@@ -27,7 +27,6 @@ distfiles=" ${homepage}/archive/refs/tags/rocm-${version}.tar.gz>CLR-${version}.
 checksum="0b88af1e99643899d11b1c8cf8a3c46601051b328a5e0ffbd44ee88b7eb0db33
  4b3c4dfcf8595da0e1b8c3e8067b1ccebeaac337762ff098db14375fa8dd4487
  5800fac92b841ef6f52acda78d9bf86f83970bec0fb848a6265d239bdb7eb51a"
-subpackages="HIP"
 
 export CLR_DIR="${_clr_dir}"
 export HIP_DIR="${_hip_dir}"
@@ -49,13 +48,3 @@ post_install() {
 	vlicense ${_hip_dir}/LICENSE.txt
 	vlicense ${_hipcc_dir}/LICENSE.txt
 }
-
-HIP_package() {
-	short_desc+="ROCm HIP Compiler "
-	depends="ROCm-clr>=${version}_${revision}"
-	pkg_install() {
-		vmove /usr/lib/rocm/hip
-		vmove /usr/lib/rocm/include/hip
-	}
-}
-
