@@ -6,9 +6,9 @@ revision=1
 #build_wrksrc=rocr-runtime/src
 build_wrksrc=src
 build_style=cmake
-configure_args=" -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -Wno-dev "
-hostmakedepends="llvm-project-amd ROCm-cmake pkg-config xxd"
-makedepends="ROCt ROCm-device-libs libnuma-devel elfutils-devel libdrm-devel libffi-devel libxml2-devel ncurses-libtinfo-devel libedit-devel"
+#configure_args="-DCMAKE_BUILD_TYPE=Release"
+hostmakedepends="pkg-config xxd"
+makedepends="ROCt libnuma-devel elfutils-devel libdrm-devel llvm-project-amd libffi-devel libxml2-devel ncurses-libtinfo-devel ROCm-device-libs libedit-devel"
 depends=""
 short_desc="HSA Runtime API and runtime for ROCm"
 maintainer="Daniel Martinez <danielmartinez@cock.li>"
