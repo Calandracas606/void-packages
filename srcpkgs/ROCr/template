@@ -1,22 +1,18 @@
 # Template file for 'ROCr'
 pkgname=ROCr
-version=5.6.1
+version=5.7.1
 revision=1
 #archs="i686 x86_64"
 #build_wrksrc=rocr-runtime/src
 build_wrksrc=src
 build_style=cmake
-configure_args=" -DCMAKE_INSTALL_PREFIX=/usr/lib/rocm
+configure_args=" -DCMAKE_INSTALL_PREFIX=/usr/lib/rocm -Wno-dev
+	-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
 	-DCMAKE_PREFIX_PATH=/usr/lib/rocm
+	-DCMAKE_C_COMPILER=/usr/lib/rocm/llvm/bin/clang
+	-DCMAKE_CXX_COMPILER=/usr/lib/rocm/llvm/bin/clang++
 "
-#	-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
-#	-DCMAKE_PREFIX_PATH=/usr/lib/rocm
-#	-DCMAKE_C_COMPILER=/usr/lib/rocm/llvm/bin/clang
-#	-DCMAKE_CXX_COMPILER=/usr/lib/rocm/llvm/bin/clang++
-#"
-#hostmakedepends="llvm-project-amd ROCm-cmake pkg-config xxd"
-#makedepends="ROCt ROCm-device-libs libnuma-devel elfutils-devel libdrm-devel libffi-devel libxml2-devel ncurses-libtinfo-devel libedit-devel"
-hostmakedepends="ROCm-cmake pkg-config xxd llvm-project-amd"
+hostmakedepends="llvm-project-amd ROCm-cmake pkg-config xxd"
 makedepends="ROCt ROCm-device-libs libnuma-devel elfutils-devel libdrm-devel libffi-devel libxml2-devel ncurses-libtinfo-devel libedit-devel"
 depends=""
 short_desc="HSA Runtime API and runtime for ROCm"
@@ -26,6 +22,6 @@ homepage="https://github.com/radeonopencompute/rocr-runtime"
 #shlib_provides="libhsa-runtime64.so"
 #changelog=""
 distfiles="https://github.com/RadeonOpenCompute/ROCR-Runtime/archive/refs/tags/rocm-${version}.tar.gz"
-checksum=4de9a57c2092edf9398d671c8a2c60626eb7daf358caf710da70d9c105490221
+checksum=655e9bfef4b0b6ad3f9b89c934dc0a8377273bb0bccbda6c399ac5d5d2c1c04c
 #distfiles="https://github.com/ROCm-Developer-Tools/aomp/releases/download/rel_18.0-0/aomp-18.0-0.tar.gz"
 #checksum=8b8fb2b513130dc96f082d78545397460a5e3cc80a0a7f9efafd9e0d63845ce4
