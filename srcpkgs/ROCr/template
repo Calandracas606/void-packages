@@ -6,12 +6,7 @@ revision=1
 #build_wrksrc=rocr-runtime/src
 build_wrksrc=src
 build_style=cmake
-configure_args=" -DCMAKE_INSTALL_PREFIX=/usr/lib/rocm -Wno-dev
-	-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
-	-DCMAKE_PREFIX_PATH=/usr/lib/rocm
-	-DCMAKE_C_COMPILER=/usr/lib/rocm/llvm/bin/clang
-	-DCMAKE_CXX_COMPILER=/usr/lib/rocm/llvm/bin/clang++
-"
+configure_args=" -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -Wno-dev "
 hostmakedepends="llvm-project-amd ROCm-cmake pkg-config xxd"
 makedepends="ROCt ROCm-device-libs libnuma-devel elfutils-devel libdrm-devel libffi-devel libxml2-devel ncurses-libtinfo-devel libedit-devel"
 depends=""
