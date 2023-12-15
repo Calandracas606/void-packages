@@ -6,7 +6,8 @@ build_wrksrc=clr-rocm-${version}
 build_style=cmake
 _clr_dir=${XBPS_BUILDDIR}/${pkgname}-${version}/clr-rocm-${version}
 _hip_dir=${XBPS_BUILDDIR}/${pkgname}-${version}/HIP-rocm-${version}
-#_hipcc_dir=${XBPS_BUILDDIR}/${pkgname}-${version}/HIPCC-rocm-${version}
+#_clr_dir=${wrksrc}/clr-rocm-${version}
+#_hip_dir=${wrksrc}/HIP-rocm-${version}
 configure_args="
 	-DCLR_BUILD_HIP=ON
 	-DHIP_COMMON_DIR=$_hip_dir
@@ -22,6 +23,8 @@ configure_args="
 hostmakedepends="llvm-project-amd-devel ROCm-cmake pkg-config xxd git python3-cppheaderparser"
 #makedepends="llvm-project-amd-devel ROCr-devel comgr-devel libnuma-devel MesaLib-devel ncurses-libtinfo-devel libxml2-devel libzstd-devel"
 makedepends="hipcc ROCr-devel comgr libnuma-devel libffi-devel libedit-devel MesaLib-devel ncurses-libtinfo-devel libxml2-devel libzstd-devel"
+depends="comgr-${version}_${revision} ROCr-${version}_${revision}"
+#conflicts="comgr>${version}_999 comgr<${version} ROCr>${version}_999 ROCr<${version} hipcc"
 short_desc="AMD CLR - Compute Language Runtimes"
 maintainer="Daniel Martinez <danielmartinez@cock.li>"
 license="MIT"
@@ -32,7 +35,7 @@ distfiles=" ${homepage}/archive/refs/tags/rocm-${version}.tar.gz>CLR-${version}.
 checksum="0b88af1e99643899d11b1c8cf8a3c46601051b328a5e0ffbd44ee88b7eb0db33
  4b3c4dfcf8595da0e1b8c3e8067b1ccebeaac337762ff098db14375fa8dd4487"
 # d47d27ef2b5de7f49cdfd8547832ac9b437a32e6fc6f0e9c1646f4b704c90aee"
-subpackages="HIP"
+subpackages="HIP-devel HIP ROCm-clr-devel"
 
 export CLR_DIR="${_clr_dir}"
 export HIP_DIR="${_hip_dir}"
@@ -41,26 +44,48 @@ export HIP_DIR="${_hip_dir}"
 export ROCM_PATH=/usr
 
 #pre_configure() {
-#	cd "$HIPCC_DIR"
-#	mkdir -p build
-#	cd build
-#	cmake ..
-#	make
+#	echo "MY WRKSRC: ${wrksrc}"
+#	echo "${_clr_dir}"
+#	echo "${_hip_dir}"
 #}
 
 post_install() {
 	vlicense ${_clr_dir}/LICENCE
 	vlicense ${_clr_dir}/hipamd/LICENSE.txt
-	vlicense ${_hip_dir}/LICENSE.txt
 #	vlicense ${_hipcc_dir}/LICENSE.txt
+}
+
+HIP-devel_package() {
+	short_desc+="ROCm HIP Compiler - development files"
+	depends="HIP-${version}_${revision} ROCm-clr-devel-${version}_${revision}"
+	pkg_install() {
+		vmove /usr/hip/cmake
+		vmove /usr/hip/lib/cmake
+		vmove /usr/lib/cmake/hip
+		vmove /usr/include/hip
+		vmove /usr/hip/include
+	}
 }
 
 HIP_package() {
 	short_desc+="ROCm HIP Compiler "
-	depends="ROCm-clr>=${version}_${revision}"
+	depends="ROCm-clr-${version}_${revision}"
 	pkg_install() {
 		vmove /usr/hip
-		vmove /usr/include/hip
+		vmove "/usr/bin/hip*"
+		vlicense ${_hip_dir}/LICENSE.txt
+#		vmove /usr/include/hip
 	}
 }
 
+ROCm-clr-devel_package() {
+	short_desc+="AMD CLR - Compute Language Runtimes - development files"
+	depends="ROCm-clr-${version}_${revision}"
+	pkg_install() {
+		vmove /usr/lib/cmake
+		vmove /usr/include
+#		vmove /usr/hip
+#		vmove "/usr/bin/hip*"
+#		vmove /usr/include/hip
+	}
+}

@@ -3,7 +3,6 @@ pkgname=ROCm-cmake
 version=5.6.1
 revision=1
 build_style=cmake
-#configure_args=" -DCMAKE_INSTALL_PREFIX=/usr/lib/rocm "
 short_desc="Cmake modules for ROCm"
 maintainer="Daniel Martinez <danielmartinez@cock.li>"
 license="MIT"
