@@ -33,7 +33,7 @@ configure_args=" -DLLVM_ENABLE_PROJECTS=clang;lld;clang-tools-extra;compiler-rt
 #conf_files=""
 #make_dirs="/var/log/dir 0755 root root"
 hostmakedepends="pkg-config"
-makedepends="llvm clang clang-tools-extra libffi-devel ncurses-libtinfo-devel zlib-devel libxml2-devel libzstd-devel"
+makedepends="llvm clang clang-tools-extra rocm-cmake libffi-devel ncurses-libtinfo-devel zlib-devel libxml2-devel libzstd-devel"
 #hostmakedepends="pkg-config git cmake which wget autoconf automake rpm cpio ninja xxd flex texinfo"
 #makedepends="pciutils-devel libnuma-devel libffi-devel python3-devel openmpi-devel MesaLib-devel libtool libdrm-devel gtest-devel libdwarf-devel elfutils-devel ncurses-libtinfo-devel libquadmath-devel python3-cppheaderparser python3-wheel python3-lxml python3-ply expat-devel gmp-devel mpfr-devel babeltrace-devel python-devel python3-pip"
 depends=""
