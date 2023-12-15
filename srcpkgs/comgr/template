@@ -1,28 +1,27 @@
 # Template file for 'comgr'
 pkgname=comgr
-version=5.6.1
+version=5.7.1
 revision=1
 #archs="i686 x86_64"
 #build_wrksrc=llvm-project/amd/comgr
 build_wrksrc=lib/comgr
 build_style=cmake
-configure_args=" -DCMAKE_INSTALL_PREFIX=/usr/lib/rocm
-	-DCMAKE_PREFIX_PATH=/usr/lib/rocm;/usr/lib/rocm/llvm
+configure_args=" -DCMAKE_INSTALL_PREFIX=/usr/lib/rocm -Wno-dev
+	-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
+	-DCMAKE_PREFIX_PATH=/usr/lib/rocm/llvm
+	-DCMAKE_C_COMPILER=/usr/lib/rocm/llvm/bin/clang
+	-DCMAKE_CXX_COMPILER=/usr/lib/rocm/llvm/bin/clang++
 "
-#	-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
-#	-DCMAKE_PREFIX_PATH=/usr/lib/rocm/llvm
-#	-DCMAKE_C_COMPILER=/usr/lib/rocm/llvm/bin/clang
-#	-DCMAKE_CXX_COMPILER=/usr/lib/rocm/llvm/bin/clang++
-#"
 #configure_args=""
 #make_build_args=""
 #make_install_args=""
 #conf_files=""
 #make_dirs="/var/log/dir 0755 root root"
 hostmakedepends="llvm-project-amd ROCm-cmake pkg-config xxd perl"
-#makedepends="ROCr ROCt elfutils-devel libdrm-devel libffi-devel libxml2-devel ncurses-libtinfo-devel ROCm-device-libs MesaLib-devel libedit-devel"
-#makedepends="ROCr ROCt elfutils-devel libdrm-devel libffi-devel libxml2-devel ncurses-libtinfo-devel ROCm-device-libs MesaLib-devel libedit-devel"
-makedepends="ROCr ROCt ROCm-device-libs libffi-devel ncurses-libtinfo-devel libxml2-devel libzstd-devel"
+makedepends="ROCr ROCt libnuma-devel elfutils-devel libdrm-devel libffi-devel libxml2-devel ncurses-libtinfo-devel ROCm-device-libs MesaLib-devel libedit-devel"
+#  llvm-project-amd
+#hostmakedepends="pkg-config"
+#makedepends="ROCm-device-libs clang llvm"
 depends=""
 short_desc="ROCm Compiler Support"
 maintainer="Daniel Martinez <danielmartinez@cock.li>"
@@ -32,4 +31,4 @@ homepage="https://github.com/RadeonOpenCompute/ROCm-CompilerSupport"
 #distfiles="https://github.com/ROCm-Developer-Tools/aomp/releases/download/rel_18.0-0/aomp-18.0-0.tar.gz"
 #checksum=8b8fb2b513130dc96f082d78545397460a5e3cc80a0a7f9efafd9e0d63845ce4
 distfiles="${homepage}/archive/refs/tags/rocm-${version}.tar.gz"
-checksum=0a85d84619f98be26ca7a32c71f94ed3c4e9866133789eabb451be64ce739300
+checksum=3b9433b4a0527167c3e9dfc37a3c54e0550744b8d4a8e1be298c8d4bcedfee7c
