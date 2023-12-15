@@ -1,23 +1,21 @@
 # Template file for 'ROCm-device-libs'
 pkgname=ROCm-device-libs
-version=5.6.1
+version=5.7.1
 revision=1
 #archs="i686 x86_64"
 #build_wrksrc=amd/device-libs
 build_style=cmake
-configure_args=" -DCMAKE_INSTALL_PREFIX=/usr/lib/rocm
-	-DCMAKE_PREFIX_PATH=/usr/lib/rocm
+configure_args=" -DCMAKE_INSTALL_PREFIX=/usr/lib/rocm -Wno-dev
+	-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
+	-DCMAKE_C_COMPILER=/usr/lib/rocm/llvm/bin/clang
+	-DCMAKE_CXX_COMPILER=/usr/lib/rocm/llvm/bin/clang++
 "
-#	-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=ON
-#	-DCMAKE_C_COMPILER=/usr/lib/rocm/llvm/bin/clang
-#	-DCMAKE_CXX_COMPILER=/usr/lib/rocm/llvm/bin/clang++
-#"
 #configure_args="-DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++"
 #make_build_args=""
 #make_install_args=""
 #conf_files=""
 #make_dirs="/var/log/dir 0755 root root"
-hostmakedepends="pkg-config ROCm-cmake llvm-project-amd"
+hostmakedepends="llvm-project-amd pkg-config ROCm-cmake"
 makedepends="libffi-devel ncurses-libtinfo-devel zlib-devel libxml2-devel libzstd-devel"
 depends=""
 short_desc="ROCm Device Libraries"
@@ -28,4 +26,4 @@ homepage="https://github.com/RadeonOpenCompute/ROCm-Device-Libs"
 #distfiles="https://github.com/RadeonOpenCompute/llvm-project/archive/refs/tags/rocm-${version}.tar.gz"
 #checksum=6b54c422e45ad19c9bf5ab090ec21753e7f7d854ca78132c30eb146657b168eb
 distfiles="${homepage}/archive/refs/tags/rocm-${version}.tar.gz"
-checksum=f0dfab272ff936225bfa1e9dabeb3c5d12ce08b812bf53ffbddd2ddfac49761c
+checksum=703de8403c0bd0d80f37c970a698f10f148daf144d34f982e4484d04f7c7bbef
