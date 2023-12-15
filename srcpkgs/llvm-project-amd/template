@@ -11,6 +11,7 @@ configure_args="
 	-DCMAKE_BUILD_TYPE=Release
 	-DCMAKE_RELEASE_TYPE=Release
 	-DLLVM_ENABLE_ASSERTIONS=ON
+	-DLLVM_TARGETS_TO_BUILD=AMDGPU;X86
 	-DLLVM_ENABLE_BINDINGS=OFF 
 	-DLLVM_INCLUDE_BENCHMARKS=OFF
 	-DCLANG_DEFAULT_LINKER=lld
@@ -22,7 +23,6 @@ configure_args="
 	-DLIBCXX_ENABLE_STATIC=ON
 	-DLIBCXXABI_ENABLE_STATIC=ON
 "
-#	-DLLVM_TARGETS_TO_BUILD=AMDGPU;X86
 hostmakedepends="pkg-config git python3 ROCm-cmake"
 makedepends="libffi-devel ncurses-libtinfo-devel zlib-devel libxml2-devel libzstd-devel libedit-devel"
 depends=""
