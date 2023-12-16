@@ -1,6 +1,6 @@
 # Template file for 'ROCm-SMI-LIB'
 pkgname=ROCm-SMI-LIB
-version=5.6.1
+version=6.0.0
 revision=1
 #archs="i686 x86_64"
 #build_wrksrc=
@@ -22,4 +22,4 @@ license="NCSA"
 homepage="https://github.com/ROCm/rocm_smi_lib"
 #changelog=""
 distfiles="${homepage}/archive/refs/tags/rocm-${version}.tar.gz"
-checksum=4d79cb0482b2f801cc7824172743e3dd2b44b9f6784d1ca2e5067f2fbb4ef803
+checksum=0053b42402fd007e5ca9b3186c70f2c6f1b3026558f328722adadc2838c51309
