@@ -9,7 +9,7 @@ configure_args=" -DROCRTST_BLD_TYPE=Release "
 #	-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=True
 #"
 hostmakedepends="ROCm-cmake pkg-config git"
-makedepends="ROCr-devel"
+makedepends="ROCr"
 short_desc="ROCm Info"
 maintainer="Daniel Martinez <danielmartinez@cock.li>"
 license="NCSA"
