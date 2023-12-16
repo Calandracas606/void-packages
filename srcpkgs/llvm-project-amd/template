@@ -1,10 +1,13 @@
 # Template file for 'llvm-project-amd'
 pkgname=llvm-project-amd
-version=5.6.1
+version=6.0.0
 revision=1
-build_wrksrc=llvm
+#build_wrksrc=llvm
+build_wrksrc=llvm-project-rocm-${version}/llvm
 build_style=cmake
-_llvm_root=${XBPS_BUILDDIR}/${pkgname}-${version}
+_llvm_root=${XBPS_BUILDDIR}/${pkgname}-${version}/llvm-project-rocm-${version}
+#_llvm_root=${XBPS_BUILDDIR}/${pkgname}-${version}
+#_llvm_dir=${_llvm_root}/${build_wrksrc}
 configure_args=" -DCMAKE_BUILD_TYPE=Release
 	-DLLVM_ENABLE_PROJECTS=llvm;clang;lld 
 	-DLLVM_EXTERNAL_PROJECTS=device-libs;comgr;hipcc
@@ -28,14 +31,31 @@ depends=""
 short_desc="LLVM Project for ROCm"
 maintainer="Daniel Martinez <danielmartinez@airmail.cc>"
 license="MIT"
-homepage="https://github.com/RadeonOpenCompute/llvm-project"
-_llvm_ref="aomp-18.0-0"
-distfiles="https://api.github.com/repos/ROCm/llvm-project/tarball/${_llvm_ref}>llvm-project-amd-${_llvm_ref}.tar.gz"
-checksum=f8f9eaf4d72de118c6e73b402a115edd62f787d9a8bd0b68d83373e6faa4ac49
+homepage="https://github.com/ROCm/llvm-project"
+#_llvm_ref="487faa8fb21fe5e099ae88c2ac46832fc168bac4"
+#distfiles="https://api.github.com/repos/ROCm/llvm-project/tarball/${_llvm_ref}>llvm-project-amd-${_llvm_ref}.tar.gz"
+#checksum=b4df28a582d7cdf16e88e6933d964715ea370bb5e51c285e21773b0b70a1e45f
+distfiles="https://github.com/ROCm/llvm-project/archive/refs/tags/rocm-${version}.tar.gz>llvm-project-${version}.tar.gz
+https://github.com/ROCm/HIPCC/archive/refs/tags/rocm-${version}.tar.gz>HIPCC-${version}.tar.gz
+https://github.com/ROCm/ROCm-CompilerSupport/archive/refs/tags/rocm-${version}.tar.gz>comgr-${version}.tar.gz
+https://github.com/ROCm/ROCm-Device-Libs/archive/refs/tags/rocm-${version}.tar.gz>device-libs-${version}.tar.gz "
+checksum="c673708d413d60ca8606ee75c77e9871b6953c59029c987b92f2f6e85f683626
+ e9cfaaecaf0e6ed363946439197f340c115e8e1189f96dbd716cf20245c29255
+ 04353d27a512642a5e5339532a39d0aabe44e0964985de37b150a2550385800a
+ 198df4550d4560537ba60ac7af9bde31d59779c8ec5d6309627f77a43ab6ef6f"
 python_version=3
 subpackages="comgr ROCm-device-libs llvm-project-amd-devel hipcc"
 
-_llvm_version=18
+#_llvm_version=18
+_llvm_version=17.0.0
+
+post_extract() {
+#      mv llvm-project-rocm-${version} llvm
+      mkdir -p ${_llvm_root}/amd
+      mv ${_llvm_root}/../ROCm-Device-Libs-rocm-${version} ${_llvm_root}/amd/device-libs
+      mv ${_llvm_root}/../ROCm-CompilerSupport-rocm-${version}/lib/comgr ${_llvm_root}/amd/comgr
+      mv ${_llvm_root}/../HIPCC-rocm-${version} ${_llvm_root}/amd/hipcc
+}
 
 comgr_package() {
 	short_desc+="ROCm Code Object Manager"
