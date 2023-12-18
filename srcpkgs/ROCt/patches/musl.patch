@@ -1,0 +1,53 @@
+diff --git a/src/globals.c b/src/globals.c
+index 851853a..317b574 100644
+--- a/src/globals.c
++++ b/src/globals.c
+@@ -32,5 +32,7 @@ unsigned long kfd_open_count;
+ unsigned long system_properties_count;
+ pthread_mutex_t hsakmt_mutex = PTHREAD_MUTEX_INITIALIZER;
+ bool is_dgpu;
++#ifndef PAGE_SIZE
+ int PAGE_SIZE;
++#endif
+ int PAGE_SHIFT;
+diff --git a/src/libhsakmt.h b/src/libhsakmt.h
+index 2d8da2c..d3d9fd8 100644
+--- a/src/libhsakmt.h
++++ b/src/libhsakmt.h
+@@ -62,7 +62,9 @@ extern HsaVersionInfo kfd_version_info;
+ 	do { if ((minor) > kfd_version_info.KernelInterfaceMinorVersion)\
+ 		return HSAKMT_STATUS_NOT_SUPPORTED; } while (0)
+ 
++#ifndef PAGE_SIZE
+ extern int PAGE_SIZE;
++#endif
+ extern int PAGE_SHIFT;
+ 
+ /* VI HW bug requires this virtual address alignment */
+diff --git a/src/openclose.c b/src/openclose.c
+index 4913349..4a2a583 100644
+--- a/src/openclose.c
++++ b/src/openclose.c
+@@ -116,7 +116,9 @@ static void clear_after_fork(void)
+ 
+ static inline void init_page_size(void)
+ {
++#ifndef PAGE_SIZE
+ 	PAGE_SIZE = sysconf(_SC_PAGESIZE);
++#endif
+ 	PAGE_SHIFT = ffs(PAGE_SIZE) - 1;
+ }
+ 
+diff --git a/src/topology.c b/src/topology.c
+index d2c81a9..c433acc 100644
+--- a/src/topology.c
++++ b/src/topology.c
+@@ -1369,7 +1369,7 @@ static int topology_create_temp_cpu_cache_list(int node,
+ 	 * which can be present twice in the string above. 29 is for the prefix
+ 	 * and the +6 is for the cache suffix
+ 	 */
+-	const uint32_t MAXPATHSIZE = 29 + MAXNAMLEN + (MAXNAMLEN + 6);
++	const uint32_t MAXPATHSIZE = 29 + NAME_MAX + (NAME_MAX + 6);
+ 	cpu_cacheinfo_t *p_temp_cpu_ci_list; /* a list of cpu_ci */
+ 	char path[MAXPATHSIZE], node_dir[MAXPATHSIZE];
+ 	int max_cpus;

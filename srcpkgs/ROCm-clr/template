@@ -11,16 +11,16 @@ _hip_dir=${XBPS_BUILDDIR}/${pkgname}-${version}/HIP-rocm-${version}
 configure_args="
 	-DCLR_BUILD_HIP=ON
 	-DHIP_COMMON_DIR=$_hip_dir
-	-DHIPCC_BIN_DIR=/usr/bin
-	-DROCM_PATH=/usr
+	-DHIPCC_BIN_DIR=/usr/lib/rocm/bin
+	-DROCM_PATH=/usr/lib/rocm
+	-DCMAKE_INSTALL_PREFIX=/usr/lib/rocm
+	-DCMAKE_PREFIX_PATH=/usr/lib/rocm
 "
 #	-DCLR_BUILD_OCL=ON
-# -DCMAKE_INSTALL_PREFIX=/usr/lib/rocm
-#	-DCMAKE_PREFIX_PATH=/usr/lib/rocm
 #	-DCMAKE_INSTALL_RPATH=/usr/lib
 #	-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=True
 #hostmakedepends="llvm-project-amd ROCm-cmake pkg-config xxd git python3-cppheaderparser"
-hostmakedepends="llvm-project-amd-devel ROCm-cmake pkg-config xxd git python3-cppheaderparser"
+hostmakedepends="llvm-project-amd-devel ROCm-cmake pkg-config xxd git python3-cppheaderparser rocminfo"
 #makedepends="llvm-project-amd-devel ROCr-devel comgr-devel libnuma-devel MesaLib-devel ncurses-libtinfo-devel libxml2-devel libzstd-devel"
 makedepends="hipcc ROCr comgr libnuma-devel libffi-devel libedit-devel MesaLib-devel ncurses-libtinfo-devel libxml2-devel libzstd-devel"
 #depends="comgr-${version}_${revision} ROCr-${version}_${revision}"
@@ -42,7 +42,7 @@ export CLR_DIR="${_clr_dir}"
 export HIP_DIR="${_hip_dir}"
 #export HIPCC_DIR="${_hipcc_dir}"
 #export HIP_CLANG_PATH=/usr/bin
-export ROCM_PATH=/usr
+export ROCM_PATH=/usr/lib/rocm
 
 #pre_configure() {
 #	echo "MY WRKSRC: ${wrksrc}"

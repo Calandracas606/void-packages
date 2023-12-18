@@ -26,6 +26,7 @@ configure_args=" -DCMAKE_BUILD_TYPE=Release
 	-DLIBCLANG_BUILD_STATIC=ON
 	-DENABLE_SHARED=OFF
 	-DBUILD_TESTING=OFF
+	-DCMAKE_INSTALL_PREFIX=/usr/lib/rocm
 "
 hostmakedepends="pkg-config git python3 ROCm-cmake"
 makedepends="libffi-devel ncurses-libtinfo-devel zlib-devel libxml2-devel libzstd-devel libedit-devel"
@@ -64,10 +65,11 @@ post_extract() {
 comgr_package() {
 	short_desc+="ROCm Code Object Manager"
 	pkg_install() {
-		vmove /usr/lib/cmake/amd_comgr
-		vmove "/usr/lib/libamd_comgr.*"
-		vmkdir /usr/include/amd_comgr
-		vcopy build/tools/comgr/include/amd_comgr.h /usr/include/amd_comgr
+		vmove /usr/lib/rocm/lib64/cmake/amd_comgr
+		vmove "/usr/lib/rocm/lib64/libamd_comgr.*"
+#		vmkdir /usr/lib/rocm/include/amd_comgr
+		#vcopy build/tools/comgr/include/amd_comgr.h /usr/lib/rocm/include/amd_comgr
+		vmove /usr/lib/rocm/include/amd_comgr
 	}
 }
 
@@ -75,8 +77,8 @@ comgr_package() {
 ROCm-device-libs_package() {
 	short_desc+="ROCm Device Libraries"
 	pkg_install() {
-		vmove /usr/amdgcn
-		vmove /usr/lib/cmake/AMDDeviceLibs/AMDDeviceLibsConfig.cmake
+		vmove /usr/lib/rocm/amdgcn
+		vmove /usr/lib/rocm/lib64/cmake/AMDDeviceLibs/AMDDeviceLibsConfig.cmake
 	}
 }
 
@@ -84,8 +86,8 @@ hipcc_package() {
 	short_desc+="HIP Compiler Driver"
 	conflicts="HIP"
 	pkg_install() {
-		vmove "/usr/bin/hip*"
-		vmove /usr/hip
+		vmove "/usr/lib/rocm/bin/hip*"
+		vmove /usr/lib/rocm/hip
 	}
 }
 
@@ -93,12 +95,12 @@ llvm-project-amd-devel_package() {
 	short_desc+=" - development files"
 	depends="llvm-project-amd-${version}_${revision}"
 	pkg_install() {
-		vmove usr/include
-		vmove usr/lib/cmake
-		vmove "usr/lib/*.a"
-		vmove "/usr/lib/clang/${_llvm_version}/include"
-		vmove /usr/share
-		vmove /usr/lib/libscanbuild
-		vmove /usr/lib/libear
+		vmove usr/lib/rocm/include
+		vmove usr/lib/rocm/lib/cmake
+		vmove "usr/lib/rocm/lib/*.a"
+		vmove "/usr/lib/rocm/lib/clang/${_llvm_version}/include"
+		vmove /usr/lib/rocm/share
+		vmove /usr/lib/rocm/lib/libscanbuild
+		vmove /usr/lib/rocm/lib/libear
 	}
 }
