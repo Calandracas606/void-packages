@@ -1,0 +1,37 @@
+# Template file for 'vc-intrinsics'
+pkgname=vc-intrinsics
+version=0.16.0
+revision=1
+#archs="i686 x86_64"
+#build_wrksrc=
+build_style=cmake
+configure_args=" -DLLVM_DIR=/usr/lib/cmake/llvm "
+#make_build_args=""
+#make_install_args=""
+#conf_files=""
+#make_dirs="/var/log/dir 0755 root root"
+hostmakedepends="pkg-config python3 git python3-Sphinx"
+makedepends="llvm libffi-devel ncurses-libtinfo-devel zlib-devel libxml2-devel libzstd-devel libedit-devel"
+#depends="llvm"
+short_desc="Aditional Video Card Intrinsics for llvm IR"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="MIT"
+homepage="https://github.com/intel/vc-intrinsics"
+#changelog=""
+distfiles="${homepage}/archive/refs/tags/v${version}.tar.gz"
+checksum=09f314c73d6e9ebe72facd01367bdd237a035a13d74d6fcdda8c2d076f7bf152
+
+post_install() {
+	vlicense LICENSE.md
+}
+
+vc-intrinsics-docs_package() {
+	short_desc+=" - Documentation "
+	depends="vc-intrinsics-${version}_${revision}"
+	pkg_install() {
+		cd GenXIntrinsics/docs
+		make -f Makefile.sphinx html
+		vmkdir /usr/share/vc-intrinsics/docs
+		vcopy _build/html /usr/share/vc-intrinsics/docs
+	}
+}

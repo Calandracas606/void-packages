@@ -1,0 +1,30 @@
+# Template file for 'intel-graphics-compiler'
+pkgname=intel-graphics-compiler
+version=1.0.15468.11
+revision=1
+#archs="i686 x86_64"
+#build_wrksrc=
+build_style=cmake
+configure_args=" -DIGC_OPTION__LLVM_PREFERRED_VERSION=15.0.7 
+	-DIGC_OPTION__SPIRV_TOOLS_MODE=Prebuilds 
+	-DIGC_OPTION__USE_PREINSTALLED_SPIRV_HEADERS=ON
+	-DIGC_OPTION__VC_INTRINSICS_MODE=Prebuilds
+"
+#make_build_args=""
+#make_install_args=""
+#conf_files=""
+#make_dirs="/var/log/dir 0755 root root"
+hostmakedepends="pkg-config bison flex python3 python3-Mako"
+makedepends="llvm clang lld-devel opencl-clang vc-intrinsics SPIRV-LLVM-Translator-devel SPIRV-Tools-devel SPIRV-Headers libffi-devel ncurses-libtinfo-devel zlib-devel libxml2-devel libzstd-devel libedit-devel"
+depends=""
+short_desc="LLVM based compiler for targeting Intel graphics hardware"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="MIT"
+homepage="https://github.com/intel/intel-graphics-compiler"
+#changelog=""
+distfiles="${homepage}/archive/refs/tags/igc-${version}.tar.gz"
+checksum=15b15304a0ffce73a2ec8fd4c04e6bea690f00b904270f6aebcd17ef59d644ba
+
+post_install() {
+	vlicense LICENSE.md
+}
