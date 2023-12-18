@@ -16,7 +16,6 @@ configure_args=" -DCMAKE_BUILD_TYPE=Release
 	-DLLVM_EXTERNAL_DEVICE_LIBS_SOURCE_DIR=${_llvm_root}/amd/device-libs
 	-DLLVM_EXTERNAL_COMGR_SOURCE_DIR=${_llvm_root}/amd/comgr
 	-DLLVM_EXTERNAL_HIPCC_SOURCE_DIR=${_llvm_root}/amd/hipcc
-	-DLLVM_TARGETS_TO_BUILD=AMDGPU;X86
 	-DLLVM_ENABLE_ASSERTIONS=ON
 	-DLLVM_ENABLE_BINDINGS=OFF 
 	-DLLVM_INCLUDE_BENCHMARKS=OFF
@@ -28,6 +27,7 @@ configure_args=" -DCMAKE_BUILD_TYPE=Release
 	-DBUILD_TESTING=OFF
 	-DCMAKE_INSTALL_PREFIX=/usr/lib/rocm
 "
+# -DLLVM_TARGETS_TO_BUILD=AMDGPU;X86
 hostmakedepends="pkg-config git python3 ROCm-cmake"
 makedepends="libffi-devel ncurses-libtinfo-devel zlib-devel libxml2-devel libzstd-devel libedit-devel"
 depends=""

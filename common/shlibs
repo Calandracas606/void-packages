@@ -4282,3 +4282,4 @@ libhsa-runtime64.so.1 ROCr-6.0.0_1
 libhiprtc.so.5 ROCm-clr-5.6.1_1
 libamdhip64.so.5 ROCm-clr-5.6.1_1
 libze_loader.so.1 intel-level-zero-1.15.1_1
+libopencl-clang.so.15 opencl-clang-15.0.0_1
