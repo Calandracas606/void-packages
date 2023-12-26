@@ -1,6 +1,6 @@
 # Template file for 'pinebookpro-kernel'
 pkgname=pinebookpro-kernel
-version=6.1.9
+version=6.6.8
 revision=1
 archs="aarch64*"
 short_desc="Linux kernel for Pinebook Pro"
@@ -10,8 +10,8 @@ homepage="https://www.kernel.org"
 distfiles="https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-${version%.*}.tar.xz"
 distfiles="https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-${version%.*}.tar.xz
  https://cdn.kernel.org/pub/linux/kernel/v6.x/patch-${version}.xz"
-checksum="2ca1f17051a430f6fed1196e4952717507171acfd97d96577212502703b25deb
- 64e27f1de56225372d29ff92dc2d8fca6ae961e7470f2364e98c5af0aef261dc"
+checksum="d926a06c63dd8ac7df3f86ee1ffc2ce2a3b81a2d168484e76b5b389aba8e56d0
+ 583dcf8a18344cf9eb68916b3082274a0a0531d59d732f9f4df7f870af33d72a"
 skip_extraction="patch-${version}.xz"
 python_version=3
 
@@ -22,7 +22,7 @@ noshlibprovides=yes
 preserve=yes
 
 hostmakedepends="tar xz bc elfutils-devel flex gmp-devel kmod libmpc-devel
- openssl-devel perl uboot-mkimage cpio pahole python3 zstd"
+ openssl-devel perl uboot-mkimage cpio pahole python3 zstd git"
 
 _kernver="${version}_${revision}"
 triggers="kernel-hooks"
@@ -50,6 +50,10 @@ if [ "$CROSS_BUILD" ]; then
 	_cross="CROSS_COMPILE=${XBPS_CROSS_TRIPLET}-"
 fi
 
+post_extract() {
+	git clone https://xff.cz/git/linux-firmware megos-firmware
+}
+
 pre_patch() {
 	xzcat $XBPS_SRCDISTDIR/$pkgname-$version/patch-${version}.xz | patch -Np1
 }
@@ -59,8 +63,8 @@ do_configure() {
 
 	arch=arm64
 
-	cp -f ${FILESDIR}/dotconfig .config
-	make ${makejobs} ARCH=$arch ${_cross} oldconfig
+#	cp -f ${FILESDIR}/dotconfig .config
+	make ${makejobs} ARCH=$arch ${_cross} pinebook_pro_defconfig
 
 	# Always use our revision to CONFIG_LOCALVERSION to match our pkg version.
 	sed -i -e "s|^\(CONFIG_LOCALVERSION=\).*|\1\"_${revision}\"|" .config
