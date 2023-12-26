@@ -1,6 +1,6 @@
 # Template file for 'llvm17'
 pkgname=llvm17
-version=17.0.6
+version=17.0.4
 revision=1
 build_wrksrc=llvm
 build_style=cmake
@@ -86,7 +86,7 @@ maintainer="Daniel Martinez <danielmartinez@cock.li>"
 license="Apache-2.0"
 homepage="https://www.llvm.org"
 distfiles="https://github.com/llvm/llvm-project/releases/download/llvmorg-${version}/llvm-project-${version}.src.tar.xz"
-checksum=58a8818c60e6627064f312dbf46c02d9949956558340938b71cf731ad8bc0813
+checksum=a225eb96f52e7d8c6c275b351fcc66d7a21d925eecff53730900404f244ff16a
 lib32disabled=yes
 python_version=3
 
