@@ -63,8 +63,8 @@ do_configure() {
 
 	arch=arm64
 
-#	cp -f ${FILESDIR}/dotconfig .config
-	make ${makejobs} ARCH=$arch ${_cross} pinebook_pro_defconfig
+	cp -f ${FILESDIR}/dotconfig .config
+	make ${makejobs} ARCH=$arch ${_cross} oldconfig
 
 	# Always use our revision to CONFIG_LOCALVERSION to match our pkg version.
 	sed -i -e "s|^\(CONFIG_LOCALVERSION=\).*|\1\"_${revision}\"|" .config
