@@ -99,9 +99,11 @@ if [ "$_flang_enable" = "yes" ]; then
 	subpackages+=" flang flang-devel "
 fi
 
-case "$XBPS_TARGET_MACHINE" in
-	x86_64*|aarch64*) _llvm_bolt_enable=yes;;
-esac
+if [ -z "$CROSS_BUILD" ]; then
+	case "$XBPS_TARGET_MACHINE" in
+		x86_64*|aarch64*) _llvm_bolt_enable=yes;;
+	esac
+fi
 
 if [ "$_llvm_bolt_enable" = "yes" ]; then
 	_enabled_projects+=";bolt"
@@ -114,6 +116,8 @@ if [ -z "$CROSS_BUILD" ]; then
 	hostmakedepends+=" ocaml ocaml-findlib "
 	# lldb cross build fails with lua
 	makedepends+=" lua53-devel "
+else
+	hostmakedepends+="${makedepends}"
 fi
 
 subpackages+=" clang clang-analyzer libclang libclang-cpp
@@ -130,7 +134,7 @@ subpackages+=" lld lld-devel"
 
 configure_args+=" -DLLVM_ENABLE_PROJECTS=${_enabled_projects}"
 
-#post_patch() {
+post_patch() {
 #	if [ "$_lldb_enable" = "yes" ]; then
 #		if [ "$XBPS_TARGET_LIBC" = "musl" ]; then
 #			vsed -i 's|__ptrace_request|int|g' \
@@ -142,8 +146,8 @@ configure_args+=" -DLLVM_ENABLE_PROJECTS=${_enabled_projects}"
 #	fi
 #
 #	# update config.guess for better platform detection
-#	cp $XBPS_COMMONDIR/environment/configure/automake/config.guess \
-#		${wrksrc}/llvm/cmake
+	cp $XBPS_COMMONDIR/environment/configure/automake/config.guess \
+		${wrksrc}/llvm/cmake
 #
 #	# fix linker failures on some archs
 #	vsed -i 's,check_library_exists(gcc_s .*,set(LIBCXXABI_HAS_GCC_S_LIB ON),' \
@@ -162,10 +166,10 @@ configure_args+=" -DLLVM_ENABLE_PROJECTS=${_enabled_projects}"
 #			vsed -i 's,#ssp,,' ${wrksrc}/libcxx/CMakeLists.txt
 #			;;
 #	esac
-#}
+}
 #
-#pre_configure() {
-#	local triplet
+pre_configure() {
+	local triplet
 #
 #	# Vastly reduce size of debugging symbols:
 #	CFLAGS=${CFLAGS/ -g/ -g1}
@@ -231,13 +235,50 @@ configure_args+=" -DLLVM_ENABLE_PROJECTS=${_enabled_projects}"
 #		ppc*) _arch="PowerPC";;
 #		riscv64*) _arch="RISCV64";;
 #	esac
+	case "$XBPS_TARGET_MACHINE" in
+		i686) triplet="i686-pc-linux-gnu";;
+		i686-musl) triplet="i686-linux-musl";;
+		x86_64) triplet="x86_64-unknown-linux-gnu";;
+		x86_64-musl) triplet="x86_64-linux-musl";;
+		armv5tel) triplet="arm-linux-gnueabi";;
+		armv5tel-musl) triplet="arm-linux-musleabi";;
+		armv6l) triplet="arm-linux-gnueabihf";;
+		armv7l) triplet="armv7l-linux-gnueabihf";;
+		armv6l-musl) triplet="arm-linux-musleabihf";;
+		armv7l-musl) triplet="armv7l-linux-musleabihf";;
+		aarch64) triplet="aarch64-linux-gnu";;
+		aarch64-musl) triplet="aarch64-linux-musl";;
+		ppc) triplet="powerpc-linux-gnu";;
+		ppc-musl) triplet="powerpc-linux-musl";;
+		ppcle) triplet="powerpcle-linux-gnu";;
+		ppcle-musl) triplet="powerpcle-linux-musl";;
+		ppc64le) triplet="powerpc64le-linux-gnu";;
+		ppc64le-musl) triplet="powerpc64le-linux-musl";;
+		ppc64) triplet="powerpc64-linux-gnu";;
+		ppc64-musl) triplet="powerpc64-linux-musl";;
+		mips-musl) triplet="mips-linux-musl";;
+		mipshf-musl) triplet="mips-linux-muslhf";;
+		mipsel-musl) triplet="mipsel-linux-musl";;
+		mipselhf-musl) triplet="mipsel-linux-muslhf";;
+		riscv64) triplet="riscv64-linux-gnu";;
+		riscv64-musl) triplet="riscv64-linux-musl";;
+	esac
 #
 #	triplet=${XBPS_CROSS_TRIPLET:-$XBPS_TRIPLET}
 #
 #	configure_args+=" -DLLVM_TARGET_ARCH=${_arch}"
-#	configure_args+=" -DLLVM_HOST_TRIPLE=${triplet}"
-#	configure_args+=" -DLLVM_DEFAULT_TARGET_TRIPLE=${triplet}"
-#}
+#	configure_args+=" -DLLVM_HOST_TRIPLE=${XBPS_TRIPLET}"
+#	configure_args+=" -DCMAKE_SYSTEM_NAME=${_arch}"
+#	configure_args+=" -DLLVM_DEFAULT_TARGET_TRIPLE=${XBPS_TRIPLET}"
+	configure_args+=" -DCMAKE_SYSTEM_NAME=Linux"
+#	configure_args+=" -DCMAKE_SYSTEM_NAME=Linux"
+	configure_args+=" -DLLVM_HOST_TRIPLE=${triplet}"
+	configure_args+=" -DLLVM_DEFAULT_TARGET_TRIPLE=${triplet}"
+	configure_args+=" -DLLVM_TARGETS_TO_BUILD=ARM"
+
+#XBPS_CROSS_TRIPLET="aarch64-linux-gnu"
+#XBPS_CROSS_CFLAGS="-march=armv8-a"
+}
 
 post_build() {
 
