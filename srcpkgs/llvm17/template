@@ -130,114 +130,114 @@ subpackages+=" lld lld-devel"
 
 configure_args+=" -DLLVM_ENABLE_PROJECTS=${_enabled_projects}"
 
-post_patch() {
-	if [ "$_lldb_enable" = "yes" ]; then
-		if [ "$XBPS_TARGET_LIBC" = "musl" ]; then
-			vsed -i 's|__ptrace_request|int|g' \
-				${wrksrc}/lldb/source/Plugins/Process/Linux/NativeProcessLinux.cpp
-		fi
-		# disable docs for lldb as they fail to generate
-		vsed -i '/add_subdirectory(docs)/d' \
-			${wrksrc}/lldb/CMakeLists.txt
-	fi
-
-	# update config.guess for better platform detection
-	cp $XBPS_COMMONDIR/environment/configure/automake/config.guess \
-		${wrksrc}/llvm/cmake
-
-	# fix linker failures on some archs
-	vsed -i 's,check_library_exists(gcc_s .*,set(LIBCXXABI_HAS_GCC_S_LIB ON),' \
-		${wrksrc}/libcxxabi/cmake/config-ix.cmake
-	vsed -i 's,check_library_exists(gcc .*,set(LIBCXXABI_HAS_GCC_LIB ON),' \
-		${wrksrc}/libcxxabi/cmake/config-ix.cmake
-
-	# need libssp_nonshared on some musl platforms (because of nodefaultlibs)
-	case "$XBPS_TARGET_MACHINE" in
-		ppc64*) ;;
-		ppc*-musl|i686-musl|mips*-musl)
-			vsed -i 's,^# Setup flags.$,add_library_flags(ssp_nonshared),' \
-				${wrksrc}/libunwind/src/CMakeLists.txt
-			vsed -i 's,^# Setup flags.$,add_library_flags(ssp_nonshared),' \
-				${wrksrc}/libcxxabi/src/CMakeLists.txt
-			vsed -i 's,#ssp,,' ${wrksrc}/libcxx/CMakeLists.txt
-			;;
-	esac
-}
-
-pre_configure() {
-	local triplet
-
-	# Vastly reduce size of debugging symbols:
-	CFLAGS=${CFLAGS/ -g/ -g1}
-	CXXFLAGS=${CXXFLAGS/ -g/ -g1}
-
-	# since gcc9, the build likes to blow up for ppc32 apparently because
-	# of clang being too large for a 24-bit relative call to the PLT, so
-	# optimize for size instead
-	case "$XBPS_TARGET_MACHINE" in
-		ppc64*) ;;
-		mips*-musl|ppc*) configure_args+=" -DVOID_CXX_OPT_FLAGS=-Os" ;;
-		armv*) configure_args+=" -DVOID_GCC_BUG_109180_WORKAROUND=ON" ;;
-	esac
-
-	if [ "$CROSS_BUILD" ]; then
-		msg_normal "Building host tblgen\n"
-		mkdir -p build/HOST
-		cd build/HOST
-		CC="$BUILD_CC" CXX="$BUILD_CXX" CFLAGS="$BUILD_CFLAGS" \
-			CXXFLAGS="$BUILD_CXXFLAGS" LDFLAGS="$BUILD_LDFLAGS" \
-			cmake ../.. -DCMAKE_BUILD_TYPE=Release \
-			-DLLVM_ENABLE_PROJECTS=${_enabled_projects}
-
-		make ${makejobs} -C utils/TableGen
-		configure_args+=" -DLLVM_TABLEGEN=${wrksrc}/llvm/build/HOST/bin/llvm-tblgen"
-
-		make ${makejobs} -C tools/clang/utils/TableGen
-		configure_args+=" -DCLANG_TABLEGEN=${wrksrc}/llvm/build/HOST/bin/clang-tblgen"
-
-		make ${makejobs} -C tools/mlir/tools/mlir-pdll
-		configure_args+=" -DMLIR_TABLEGEN=${wrksrc}/llvm/build/HOST/bin/mlir-tblgen"
-		configure_args+=" -DMLIR_PDLL_TABLEGEN=${wrksrc}/llvm/build/HOST/bin/mlir-pdll"
-		configure_args+=" -DMLIR_LINALG_ODS_YAML_GEN=${wrksrc}/llvm/build/HOST/bin/mlir-linalg-ods-yaml-gen"
-
-		make ${makejobs} -C tools/clang/tools/extra/clang-tidy/misc/ConfusableTable
-		configure_args+=" -DCLANG_TIDY_CONFUSABLE_CHARS_GEN=${wrksrc}/llvm/build/HOST/bin/clang-tidy-confusable-chars-gen"
-		make ${makejobs} -C tools/clang/tools/extra/pseudo/gen
-		configure_args+=" -DCLANG_PSEUDO_GEN=${wrksrc}/llvm/build/HOST/bin/clang-pseudo-gen"
-
-		make ${makejobs} -C tools/llvm-config
-		configure_args+=" -DLLVM_CONFIG_PATH=${wrksrc}/llvm/build/HOST/bin/llvm-config"
-
-		[ "$_lldb_enable" = "yes" ] && make ${makejobs} -C tools/lldb/utils/TableGen lldb-tblgen
-		[ "$_lldb_enable" = "yes" ] && configure_args+=" -DLLDB_TABLEGEN_EXE=${wrksrc}/llvm/build/HOST/bin/lldb-tblgen"
-		cd ../..
-	fi
-
-	case "$XBPS_TARGET_MACHINE" in
-	arm*-musl|i686-musl)
-		# sanitizer code is broken since it duplicates some libc bits
-		configure_args+=" -DCOMPILER_RT_BUILD_SANITIZERS=OFF"
-		;;
-	esac
-
-	case "$XBPS_TARGET_MACHINE" in
-		i686*) _arch="X86";;
-		x86_64*) _arch="X86";;
-		armv5*) _arch="Armv5te";;
-		armv6*) _arch="Armv6";;
-		armv7*) _arch="Armv7";;
-		aarch64*) _arch="AArch64";;
-		mips*) _arch="Mips";;
-		ppc*) _arch="PowerPC";;
-		riscv64*) _arch="RISCV64";;
-	esac
-
-	triplet=${XBPS_CROSS_TRIPLET:-$XBPS_TRIPLET}
-
-	configure_args+=" -DLLVM_TARGET_ARCH=${_arch}"
-	configure_args+=" -DLLVM_HOST_TRIPLE=${triplet}"
-	configure_args+=" -DLLVM_DEFAULT_TARGET_TRIPLE=${triplet}"
-}
+#post_patch() {
+#	if [ "$_lldb_enable" = "yes" ]; then
+#		if [ "$XBPS_TARGET_LIBC" = "musl" ]; then
+#			vsed -i 's|__ptrace_request|int|g' \
+#				${wrksrc}/lldb/source/Plugins/Process/Linux/NativeProcessLinux.cpp
+#		fi
+#		# disable docs for lldb as they fail to generate
+#		vsed -i '/add_subdirectory(docs)/d' \
+#			${wrksrc}/lldb/CMakeLists.txt
+#	fi
+#
+#	# update config.guess for better platform detection
+#	cp $XBPS_COMMONDIR/environment/configure/automake/config.guess \
+#		${wrksrc}/llvm/cmake
+#
+#	# fix linker failures on some archs
+#	vsed -i 's,check_library_exists(gcc_s .*,set(LIBCXXABI_HAS_GCC_S_LIB ON),' \
+#		${wrksrc}/libcxxabi/cmake/config-ix.cmake
+#	vsed -i 's,check_library_exists(gcc .*,set(LIBCXXABI_HAS_GCC_LIB ON),' \
+#		${wrksrc}/libcxxabi/cmake/config-ix.cmake
+#
+#	# need libssp_nonshared on some musl platforms (because of nodefaultlibs)
+#	case "$XBPS_TARGET_MACHINE" in
+#		ppc64*) ;;
+#		ppc*-musl|i686-musl|mips*-musl)
+#			vsed -i 's,^# Setup flags.$,add_library_flags(ssp_nonshared),' \
+#				${wrksrc}/libunwind/src/CMakeLists.txt
+#			vsed -i 's,^# Setup flags.$,add_library_flags(ssp_nonshared),' \
+#				${wrksrc}/libcxxabi/src/CMakeLists.txt
+#			vsed -i 's,#ssp,,' ${wrksrc}/libcxx/CMakeLists.txt
+#			;;
+#	esac
+#}
+#
+#pre_configure() {
+#	local triplet
+#
+#	# Vastly reduce size of debugging symbols:
+#	CFLAGS=${CFLAGS/ -g/ -g1}
+#	CXXFLAGS=${CXXFLAGS/ -g/ -g1}
+#
+#	# since gcc9, the build likes to blow up for ppc32 apparently because
+#	# of clang being too large for a 24-bit relative call to the PLT, so
+#	# optimize for size instead
+#	case "$XBPS_TARGET_MACHINE" in
+#		ppc64*) ;;
+#		mips*-musl|ppc*) configure_args+=" -DVOID_CXX_OPT_FLAGS=-Os" ;;
+#		armv*) configure_args+=" -DVOID_GCC_BUG_109180_WORKAROUND=ON" ;;
+#	esac
+#
+#	if [ "$CROSS_BUILD" ]; then
+#		msg_normal "Building host tblgen\n"
+#		mkdir -p build/HOST
+#		cd build/HOST
+#		CC="$BUILD_CC" CXX="$BUILD_CXX" CFLAGS="$BUILD_CFLAGS" \
+#			CXXFLAGS="$BUILD_CXXFLAGS" LDFLAGS="$BUILD_LDFLAGS" \
+#			cmake ../.. -DCMAKE_BUILD_TYPE=Release \
+#			-DLLVM_ENABLE_PROJECTS=${_enabled_projects}
+#
+#		make ${makejobs} -C utils/TableGen
+#		configure_args+=" -DLLVM_TABLEGEN=${wrksrc}/llvm/build/HOST/bin/llvm-tblgen"
+#
+#		make ${makejobs} -C tools/clang/utils/TableGen
+#		configure_args+=" -DCLANG_TABLEGEN=${wrksrc}/llvm/build/HOST/bin/clang-tblgen"
+#
+#		make ${makejobs} -C tools/mlir/tools/mlir-pdll
+#		configure_args+=" -DMLIR_TABLEGEN=${wrksrc}/llvm/build/HOST/bin/mlir-tblgen"
+#		configure_args+=" -DMLIR_PDLL_TABLEGEN=${wrksrc}/llvm/build/HOST/bin/mlir-pdll"
+#		configure_args+=" -DMLIR_LINALG_ODS_YAML_GEN=${wrksrc}/llvm/build/HOST/bin/mlir-linalg-ods-yaml-gen"
+#
+#		make ${makejobs} -C tools/clang/tools/extra/clang-tidy/misc/ConfusableTable
+#		configure_args+=" -DCLANG_TIDY_CONFUSABLE_CHARS_GEN=${wrksrc}/llvm/build/HOST/bin/clang-tidy-confusable-chars-gen"
+#		make ${makejobs} -C tools/clang/tools/extra/pseudo/gen
+#		configure_args+=" -DCLANG_PSEUDO_GEN=${wrksrc}/llvm/build/HOST/bin/clang-pseudo-gen"
+#
+#		make ${makejobs} -C tools/llvm-config
+#		configure_args+=" -DLLVM_CONFIG_PATH=${wrksrc}/llvm/build/HOST/bin/llvm-config"
+#
+#		[ "$_lldb_enable" = "yes" ] && make ${makejobs} -C tools/lldb/utils/TableGen lldb-tblgen
+#		[ "$_lldb_enable" = "yes" ] && configure_args+=" -DLLDB_TABLEGEN_EXE=${wrksrc}/llvm/build/HOST/bin/lldb-tblgen"
+#		cd ../..
+#	fi
+#
+#	case "$XBPS_TARGET_MACHINE" in
+#	arm*-musl|i686-musl)
+#		# sanitizer code is broken since it duplicates some libc bits
+#		configure_args+=" -DCOMPILER_RT_BUILD_SANITIZERS=OFF"
+#		;;
+#	esac
+#
+#	case "$XBPS_TARGET_MACHINE" in
+#		i686*) _arch="X86";;
+#		x86_64*) _arch="X86";;
+#		armv5*) _arch="Armv5te";;
+#		armv6*) _arch="Armv6";;
+#		armv7*) _arch="Armv7";;
+#		aarch64*) _arch="AArch64";;
+#		mips*) _arch="Mips";;
+#		ppc*) _arch="PowerPC";;
+#		riscv64*) _arch="RISCV64";;
+#	esac
+#
+#	triplet=${XBPS_CROSS_TRIPLET:-$XBPS_TRIPLET}
+#
+#	configure_args+=" -DLLVM_TARGET_ARCH=${_arch}"
+#	configure_args+=" -DLLVM_HOST_TRIPLE=${triplet}"
+#	configure_args+=" -DLLVM_DEFAULT_TARGET_TRIPLE=${triplet}"
+#}
 
 post_build() {
 
