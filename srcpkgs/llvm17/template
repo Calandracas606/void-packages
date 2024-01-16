@@ -4,36 +4,113 @@ version=17.0.6
 revision=1
 build_wrksrc=llvm
 build_style=cmake
+make_build_target=stage2
 _ext_suffix=".cpython-${py3_ver/./}-linux-${XBPS_TARGET_LIBC/glibc/gnu}.so"
 configure_args="
  -DCMAKE_BUILD_TYPE=Release -Wno-dev
- -DENABLE_LINKER_BUILD_ID=YES
- -DLLDB_USE_SYSTEM_SIX=YES
- -DLIBCXX_CXX_ABI=libcxxabi
- -DLIBCXX_ENABLE_STATIC_ABI_LIBRARY=YES
- -DLIBCXXABI_USE_LLVM_UNWINDER=YES
- -DLIBCXXABI_ENABLE_STATIC_UNWINDER=YES
- -DLIBOMP_ENABLE_SHARED=YES
- -DLIBOMP_INSTALL_ALIASES=NO
- -DLLVM_INCLUDE_DOCS=YES
- -DLLVM_BUILD_DOCS=YES
- -DLLVM_ENABLE_SPHINX=YES
- -DSPHINX_WARNINGS_AS_ERRORS=NO
- -DLLVM_INSTALL_UTILS=YES
- -DLLVM_BUILD_LLVM_DYLIB=YES
- -DLLVM_LINK_LLVM_DYLIB=YES
- -DLLVM_ENABLE_RTTI=YES
- -DLLVM_ENABLE_FFI=YES
- -DLLVM_ENABLE_RUNTIMES=all
- -DLLVM_BINUTILS_INCDIR=/usr/include
- -DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR=NO
- -DLLDB_PYTHON_RELATIVE_PATH=lib/python${py3_ver}/site-packages
- -DLLDB_PYTHON_EXE_RELATIVE_PATH=bin/python${py3_ver}
- -DLLDB_PYTHON_EXT_SUFFIX=$_ext_suffix "
+ -DCLANG_ENABLE_BOOTSTRAP=On
+ -DLLVM_ENABLE_RUNTIMES=compiler-rt;libcxx;libcxxabi;libunwind;openmp
+ -DBOOTSTRAP_LLVM_BUILD_LLVM_DYLIB=ON
+ -DBOOTSTRAP_LLVM_ENABLE_FFI=ON
+ -DBOOTSTRAP_LLVM_ENABLE_RTTI=ON
+ -DBOOTSTRAP_LLVM_LINK_LLVM_DYLIB=ON
+ -DBOOTSTRAP_LLVM_OPTIMIZED_TABLEGEN=ON
+ -DBOOTSTRAP_LLVM_USE_INTEL_JITEVENTS=ON
+ -DBOOTSTRAP_LLVM_USE_PERF=ON
+ -DBOOTSTRAP_SPHINX_WARNINGS_AS_ERRORS=OFF
+ -DBOOTSTRAP_LIBCXX_CXX_ABI=libcxxabi
+ -DBOOTSTRAP_LIBCXX_ENABLE_STATIC_ABI_LIBRARY=YES
+ -DBOOTSTRAP_LIBCXXABI_USE_LLVM_UNWINDER=YES
+ -DBOOTSTRAP_LIBCXXABI_ENABLE_STATIC_UNWINDER=YES
+ -DBOOTSTRAP_LIBOMP_ENABLE_SHARED=YES
+ -DBOOTSTRAP_LIBOMP_INSTALL_ALIASES=OFF
+ -DBOOTSTRAP_LLDB_PYTHON_RELATIVE_PATH=lib/python${py3_ver}/site-packages
+ -DBOOTSTRAP_LLDB_PYTHON_EXE_RELATIVE_PATH=bin/python${py3_ver}
+ -DBOOTSTRAP_LLDB_PYTHON_EXT_SUFFIX=$_ext_suffix
+"
+# -DBOOTSTRAP_LLVM_ENABLE_LIBCXX=ON
+#configure_args="
+# -DCMAKE_BUILD_TYPE=Release -Wno-dev
+# -DLLVM_ENABLE_PROJECTS=clang;clang-tools-extra;libclc;lld;lldb;polly;pstl;mlir;flang;bolt
+# -DLLVM_ENABLE_RUNTIMES=compiler-rt;libcxx;libcxxabi;libunwind;openmp
+# -DLLVM_BUILD_LLVM_DYLIB=ON
+# -DLLVM_INCLUDE_DOCS=YES
+# -DLLVM_BUILD_DOCS=ON
+# -DLLVM_BUILD_TESTS=ON
+# -DLLVM_BUILD_EXAMPLES=ON
+# -DLLVM_ENABLE_EXPENSIVE_CHECKS=ON
+# -DLLVM_ENABLE_FFI=ON
+# -DLLVM_ENABLE_RTTI=ON
+# -DLLVM_ENABLE_Z3_SOLVER=ON
+# -DLLVM_LINK_LLVM_DYLIB=ON
+# -DLLVM_OPTIMIZED_TABLEGEN=ON
+# -DLLVM_USE_INTEL_JITEVENTS=ON
+# -DLLVM_USE_PERF=ON
+# -DLLVM_ENABLE_SPHINX=ON
+# -DSPHINX_WARNINGS_AS_ERRORS=OFF
+# -DLIBCXX_CXX_ABI=libcxxabi
+# -DLLVM_ENABLE_LIBCXX=ON
+# -DLIBCXX_ENABLE_STATIC_ABI_LIBRARY=YES
+# -DLIBCXXABI_USE_LLVM_UNWINDER=YES
+# -DLIBCXXABI_ENABLE_STATIC_UNWINDER=YES
+# -DLIBOMP_ENABLE_SHARED=YES
+# -DLIBOMP_INSTALL_ALIASES=OFF
+# -DCMAKE_C_COMPILER=clang
+# -DCMAKE_CXX_COMPILER=clang++
+#"
+
+###################
+# -DLLVM_ENABLE_Z3_SOLVER=ON
+# -DLLVM_ENABLE_PROJECTS=clang;clang-tools-extra;compiler-rt;lld;mlir;libclc;polly;openmp;flang;bolt;lldb;cross-project-tests;libc;pstl
+# -DLLVM_ENABLE_PROJECTS=clang;clang-tools-extra;compiler-rt;lld;mlir;libclc;polly;openmp;flang;bolt;lldb
+# -DLLVM_ENABLE_RUNTIMES=all
+# -DLLVM_ENABLE_RUNTIMES=compiler-rt;libc;libcxx;libcxxabi;libunwind;openmp
+# -DLLVM_CCACHE_BUILD=ON
+# -DLLVM_BUILD_BENCHMARKS=ON
+# -DLLVM_ENABLE_LLVM_LIBC=ON
+# -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=all
+# -DLLVM_ENABLE_PROJECTS=all
+# -DLLVM_ENABLE_RUNTIMES=libc;libcxxabi;libcxx;llvm-libgcc
+# -DLLVM_ENABLE_RUNTIMES=libc;libcxxabi;libcxx
+# -DLLVM_LIBGCC_EXPLICIT_OPT_IN=Yes
+# 
+# 
+# 
+# 
+# 
+# -DLLVM_ENABLE_DOXYGEN=ON
+# ;flang
+# -DLLVM_USE_OPROFILE=ON
+####################
+# -DLLVM_ENABLE_LLD=ON
+# -DLLVM_USE_LINKER=lld
+# -DENABLE_LINKER_BUILD_ID=YES
+# -DLLDB_USE_SYSTEM_SIX=YES
+# -DLIBCXX_CXX_ABI=libcxxabi
+# -DLIBCXX_ENABLE_STATIC_ABI_LIBRARY=YES
+# -DLIBCXXABI_USE_LLVM_UNWINDER=YES
+# -DLIBCXXABI_ENABLE_STATIC_UNWINDER=YES
+# -DLIBOMP_ENABLE_SHARED=YES
+# -DLIBOMP_INSTALL_ALIASES=NO
+# -DLLVM_INCLUDE_DOCS=YES
+# -DLLVM_BUILD_DOCS=YES
+# -DLLVM_ENABLE_SPHINX=YES
+# -DSPHINX_WARNINGS_AS_ERRORS=NO
+# -DLLVM_INSTALL_UTILS=YES
+# -DLLVM_BUILD_LLVM_DYLIB=YES
+# -DLLVM_LINK_LLVM_DYLIB=YES
+# -DLLVM_ENABLE_RTTI=YES
+# -DLLVM_ENABLE_FFI=YES
+# -DLLVM_BINUTILS_INCDIR=/usr/include
+# -DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR=NO
+# -DLLDB_PYTHON_RELATIVE_PATH=lib/python${py3_ver}/site-packages
+# -DLLDB_PYTHON_EXE_RELATIVE_PATH=bin/python${py3_ver}
+# -DLLDB_PYTHON_EXT_SUFFIX=$_ext_suffix "
 hostmakedepends="perl python3 zlib-devel libffi-devel swig python3-Sphinx
- python3-recommonmark python3-sphinx-automodapi git python3-sphinx-markdown-tables python3-yaml pkg-config "
+ python3-recommonmark git python3-sphinx-markdown-tables python3-yaml python3-sphinx-automodapi
+ pkg-config lua53-devel z3 ocaml ocaml-findlib doxygen python3-graphviz python3-sphinxcontrib"
 makedepends="python3-devel zlib-devel elfutils-devel libffi-devel libedit-devel
- libxml2-devel binutils-devel "
+ libxml2-devel binutils-devel oprofile graphviz-devel sphinxbase-devel"
 depends="libllvm17>=${version}_${revision}"
 short_desc="LLVM Compiler Infrastructure Project"
 maintainer="Daniel Martinez <danielmartinez@cock.li>"
@@ -59,7 +136,8 @@ case "$XBPS_TARGET_MACHINE" in
 	ppc*) configure_args+=" -DCLANG_ENABLE_CLANGD=OFF" ;;
 esac
 
-_enabled_projects="clang;clang-tools-extra;compiler-rt;lld;mlir;libclc;polly"
+# -DLLVM_ENABLE_PROJECTS=clang;clang-tools-extra;libclc;lld;lldb;polly;pstl;mlir;flang;bolt
+_enabled_projects="clang;clang-tools-extra;lld;mlir;libclc;polly;pstl"
 
 _lldb_enable=yes
 _libomp_enable=no
@@ -79,7 +157,6 @@ subpackages="clang-tools-extra"
 
 # must go before clang
 if [ "$_libomp_enable" = "yes" ]; then
-	_enabled_projects+=";openmp"
 	subpackages+=" libomp libomp-devel"
 	# because of cmake nonsense referencing libomptarget.so.*
 	depends+=" libomp>=${version}_${revision}"
@@ -111,9 +188,10 @@ fi
 # For OCaml bindings and lldb lua scripting
 if [ -z "$CROSS_BUILD" ]; then
 	# OCaml cross build is broken
-	hostmakedepends+=" ocaml ocaml-findlib "
+	hostmakedepends+=" lua53-devel ocaml ocaml-findlib z3"
 	# lldb cross build fails with lua
 	makedepends+=" lua53-devel "
+	configure_args+=" -DLLVM_ENABLE_Z3_SOLVER=ON "
 fi
 
 subpackages+=" clang clang-analyzer libclang libclang-cpp
@@ -128,7 +206,13 @@ fi
 
 subpackages+=" lld lld-devel"
 
+#echo "Enabled projects: ${_enabled_projects}"
 configure_args+=" -DLLVM_ENABLE_PROJECTS=${_enabled_projects}"
+if [ "$CROSS_BUILD" ]; then
+	configure_args+=" -DLLVM_NATIVE_TOOL_DIR=/usr/bin "
+	configure_args+=" -DLLVM_TABLEGEN=/usr/bin/llvm-tblgen "
+	configure_args+=" -DLLDB_TABLEGEN_EXE=${wrksrc}/llvm/build/HOST/bin/lldb-tblgen"
+fi
 
 post_patch() {
 	if [ "$_lldb_enable" = "yes" ]; then
@@ -164,6 +248,10 @@ post_patch() {
 	esac
 }
 
+#pre_configure() {
+       #cp -r /usr/lib/python*/site-packages/sphinx_automodapi ../lldb/docs
+#}
+
 pre_configure() {
 	local triplet
 
@@ -180,38 +268,38 @@ pre_configure() {
 		armv*) configure_args+=" -DVOID_GCC_BUG_109180_WORKAROUND=ON" ;;
 	esac
 
-	if [ "$CROSS_BUILD" ]; then
-		msg_normal "Building host tblgen\n"
-		mkdir -p build/HOST
-		cd build/HOST
-		CC="$BUILD_CC" CXX="$BUILD_CXX" CFLAGS="$BUILD_CFLAGS" \
-			CXXFLAGS="$BUILD_CXXFLAGS" LDFLAGS="$BUILD_LDFLAGS" \
-			cmake ../.. -DCMAKE_BUILD_TYPE=Release \
-			-DLLVM_ENABLE_PROJECTS=${_enabled_projects}
-
-		make ${makejobs} -C utils/TableGen
-		configure_args+=" -DLLVM_TABLEGEN=${wrksrc}/llvm/build/HOST/bin/llvm-tblgen"
-
-		make ${makejobs} -C tools/clang/utils/TableGen
-		configure_args+=" -DCLANG_TABLEGEN=${wrksrc}/llvm/build/HOST/bin/clang-tblgen"
-
-		make ${makejobs} -C tools/mlir/tools/mlir-pdll
-		configure_args+=" -DMLIR_TABLEGEN=${wrksrc}/llvm/build/HOST/bin/mlir-tblgen"
-		configure_args+=" -DMLIR_PDLL_TABLEGEN=${wrksrc}/llvm/build/HOST/bin/mlir-pdll"
-		configure_args+=" -DMLIR_LINALG_ODS_YAML_GEN=${wrksrc}/llvm/build/HOST/bin/mlir-linalg-ods-yaml-gen"
-
-		make ${makejobs} -C tools/clang/tools/extra/clang-tidy/misc/ConfusableTable
-		configure_args+=" -DCLANG_TIDY_CONFUSABLE_CHARS_GEN=${wrksrc}/llvm/build/HOST/bin/clang-tidy-confusable-chars-gen"
-		make ${makejobs} -C tools/clang/tools/extra/pseudo/gen
-		configure_args+=" -DCLANG_PSEUDO_GEN=${wrksrc}/llvm/build/HOST/bin/clang-pseudo-gen"
-
-		make ${makejobs} -C tools/llvm-config
-		configure_args+=" -DLLVM_CONFIG_PATH=${wrksrc}/llvm/build/HOST/bin/llvm-config"
-
-		[ "$_lldb_enable" = "yes" ] && make ${makejobs} -C tools/lldb/utils/TableGen lldb-tblgen
-		[ "$_lldb_enable" = "yes" ] && configure_args+=" -DLLDB_TABLEGEN_EXE=${wrksrc}/llvm/build/HOST/bin/lldb-tblgen"
-		cd ../..
-	fi
+#	if [ "$CROSS_BUILD" ]; then
+#		msg_normal "Building host tblgen\n"
+#		mkdir -p build/HOST
+#		cd build/HOST
+#		CC="$BUILD_CC" CXX="$BUILD_CXX" CFLAGS="$BUILD_CFLAGS" \
+#			CXXFLAGS="$BUILD_CXXFLAGS" LDFLAGS="$BUILD_LDFLAGS" \
+#			cmake ../.. -DCMAKE_BUILD_TYPE=Release \
+#			-DLLVM_ENABLE_PROJECTS=${_enabled_projects}
+#
+#		make ${makejobs} -C utils/TableGen
+#		configure_args+=" -DLLVM_TABLEGEN=${wrksrc}/llvm/build/HOST/bin/llvm-tblgen"
+#
+#		make ${makejobs} -C tools/clang/utils/TableGen
+#		configure_args+=" -DCLANG_TABLEGEN=${wrksrc}/llvm/build/HOST/bin/clang-tblgen"
+#
+#		make ${makejobs} -C tools/mlir/tools/mlir-pdll
+#		configure_args+=" -DMLIR_TABLEGEN=${wrksrc}/llvm/build/HOST/bin/mlir-tblgen"
+#		configure_args+=" -DMLIR_PDLL_TABLEGEN=${wrksrc}/llvm/build/HOST/bin/mlir-pdll"
+#		configure_args+=" -DMLIR_LINALG_ODS_YAML_GEN=${wrksrc}/llvm/build/HOST/bin/mlir-linalg-ods-yaml-gen"
+#
+#		make ${makejobs} -C tools/clang/tools/extra/clang-tidy/misc/ConfusableTable
+#		configure_args+=" -DCLANG_TIDY_CONFUSABLE_CHARS_GEN=${wrksrc}/llvm/build/HOST/bin/clang-tidy-confusable-chars-gen"
+#		make ${makejobs} -C tools/clang/tools/extra/pseudo/gen
+#		configure_args+=" -DCLANG_PSEUDO_GEN=${wrksrc}/llvm/build/HOST/bin/clang-pseudo-gen"
+#
+#		make ${makejobs} -C tools/llvm-config
+#		configure_args+=" -DLLVM_CONFIG_PATH=${wrksrc}/llvm/build/HOST/bin/llvm-config"
+#
+#		[ "$_lldb_enable" = "yes" ] && make ${makejobs} -C tools/lldb/utils/TableGen lldb-tblgen
+#		[ "$_lldb_enable" = "yes" ] && configure_args+=" -DLLDB_TABLEGEN_EXE=${wrksrc}/llvm/build/HOST/bin/lldb-tblgen"
+#		cd ../..
+#	fi
 
 	case "$XBPS_TARGET_MACHINE" in
 	arm*-musl|i686-musl)
@@ -280,8 +368,8 @@ do_install() {
 		644 usr/include/mach-o
 
 	# Install libcxx and libunwind docs
-	cmake -DCMAKE_INSTALL_PREFIX=${DESTDIR}/usr -P ${wrksrc}/${build_wrksrc}/runtimes-doc/libcxx/docs/cmake_install.cmake
-	cmake -DCMAKE_INSTALL_PREFIX=${DESTDIR}/usr -P ${wrksrc}/${build_wrksrc}/runtimes-doc/libunwind/docs/cmake_install.cmake
+#	cmake -DCMAKE_INSTALL_PREFIX=${DESTDIR}/usr -P ${wrksrc}/${build_wrksrc}/runtimes-doc/libcxx/docs/cmake_install.cmake
+#	cmake -DCMAKE_INSTALL_PREFIX=${DESTDIR}/usr -P ${wrksrc}/${build_wrksrc}/runtimes-doc/libunwind/docs/cmake_install.cmake
 
 	# Can this be disabled some other way?
 	rm -rf ${DESTDIR}/usr/lib64
