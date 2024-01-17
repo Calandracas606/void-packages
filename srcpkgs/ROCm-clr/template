@@ -1,6 +1,6 @@
 # Template file for 'ROCm-clr'
 pkgname=ROCm-clr
-version=5.6.1
+version=6.0.0
 revision=1
 build_wrksrc=clr-rocm-${version}
 build_style=cmake
@@ -32,8 +32,8 @@ homepage="https://github.com/ROCm-Developer-Tools/clr"
 distfiles=" ${homepage}/archive/refs/tags/rocm-${version}.tar.gz>CLR-${version}.tar.gz
  https://github.com/ROCm-Developer-Tools/HIP/archive/refs/tags/rocm-${version}.tar.gz>HIP-${version}.tar.gz"
 # https://github.com/ROCm-Developer-Tools/HIPCC/archive/refs/tags/rocm-${version}.tar.gz>HIPCC-${version}.tar.gz "
-checksum="0b88af1e99643899d11b1c8cf8a3c46601051b328a5e0ffbd44ee88b7eb0db33
- 4b3c4dfcf8595da0e1b8c3e8067b1ccebeaac337762ff098db14375fa8dd4487"
+checksum="798b55b5b5fb90dd19db54f136d8d8e1da9ae1e408d5b12b896101d635f97e50
+ 0d575788e0b731124a8489a36652014a165b9ebab92d5456ec3c976e062f3a82"
 # d47d27ef2b5de7f49cdfd8547832ac9b437a32e6fc6f0e9c1646f4b704c90aee"
 #subpackages="HIP-devel HIP ROCm-clr-devel"
 #subpackages="HIP ROCm-clr-devel"

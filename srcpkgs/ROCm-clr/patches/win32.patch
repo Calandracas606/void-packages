@@ -1,7 +1,7 @@
-diff --git a/clr-rocm-5.6.1/hipamd/CMakeLists.txt b/clr-rocm-5.6.1/hipamd/CMakeLists.txt
+diff --git a/clr-rocm-6.0.0/hipamd/CMakeLists.txt b/clr-rocm-6.0.0/hipamd/CMakeLists.txt
 index 272ebca35..48f768680 100755
---- a/clr-rocm-5.6.1/hipamd/CMakeLists.txt
-+++ b/clr-rocm-5.6.1/hipamd/CMakeLists.txt
+--- a/clr-rocm-6.0.0/hipamd/CMakeLists.txt
++++ b/clr-rocm-6.0.0/hipamd/CMakeLists.txt
 @@ -402,8 +402,10 @@ if (NOT ${HIPCC_BIN_DIR} STREQUAL "")
    install(PROGRAMS ${HIPCC_BIN_DIR}/hipcc.pl DESTINATION bin)
    install(PROGRAMS ${HIPCC_BIN_DIR}/hipconfig.pl DESTINATION bin)
