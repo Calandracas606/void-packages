@@ -1,0 +1,78 @@
+# Template file for 'OpenCL-SDK'
+pkgname=OpenCL-SDK
+version=2023.12.14
+revision=1
+build_wrksrc=OpenCL-SDK-${version}
+build_style=cmake
+configure_args="
+	-DOPENCL_SDK_BUILD_SAMPLES=OFF
+	-DOPENCL_SDK_BUILD_OPENGL_SAMPLES=OFF
+	-DOPENCL_SDK_TEST_SAMPLES=OFF
+	-DOPENCL_SDK_BUILD_TESTS=OFF
+"
+hostmakedepends="git"
+#depends="OpenCL-Headers-${version}_${revision} OpenCL-ICD-Loader-${version}_${revision}"
+short_desc="OpenCL SDK"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="Apache-2.0"
+homepage="https://github.com/KhronosGroup/OpenCL-SDK"
+distfiles="https://github.com/KhronosGroup/OpenCL-SDK/archive/refs/tags/v${version}.tar.gz>OpenCL-SDK-${version}.tar.gz
+https://github.com/KhronosGroup/OpenCL-CLHPP/archive/refs/tags/v${version}.tar.gz>OpenCL-CLHPP-${version}.tar.gz
+https://github.com/KhronosGroup/OpenCL-Headers/archive/refs/tags/v${version}.tar.gz>OpenCL-Headers-${version}.tar.gz
+https://github.com/KhronosGroup/OpenCL-ICD-Loader/archive/refs/tags/v${version}.tar.gz>OpenCL-ICD-Loader-${version}.tar.gz"
+checksum="9d70ec09aa5d811e6b345ce27fed20fbe0d826ce944b1eaa01af4c3f822adf7b
+ 9106700634e79cfa0935ebd67197f64689ced24c42da702acf18fa8435bd8a82
+ 407d5e109a70ec1b6cd3380ce357c21e3d3651a91caae6d0d8e1719c69a1791d
+ af8df96f1e1030329e8d4892ba3aa761b923838d4c689ef52d97822ab0bd8917"
+
+post_extract() {
+	rmdir OpenCL-SDK-${version}/external/*
+	mv OpenCL-CLHPP-${version}      OpenCL-SDK-${version}/external/OpenCL-CLHPP
+	mv OpenCL-Headers-${version}    OpenCL-SDK-${version}/external/OpenCL-Headers
+	mv OpenCL-ICD-Loader-${version} OpenCL-SDK-${version}/external/OpenCL-ICD-Loader
+}
+
+#pre_configure() {
+#	vsed -i -e '/add_subdirectory.*OpenCL-Headers.*/d' CMakeLists.txt
+#	vsed -i -e '/add_subdirectory.*OpenCL-ICD-Loader.*/d' CMakeLists.txt
+#}
+
+#pre_install() {
+#	vmove usr/bin/cllayerinfo
+#	vmove "usr/lib/libOpenCL.so*"
+#}
+#
+#ocl-icd-devel_package() {
+#	build_style=meta
+#	depends="OpenCL-SDK>=${version}_${revision}"
+#	short_desc+=" (transitional dummy package)"
+#}
+#
+#ocl-icd_package() {
+#	build_style=meta
+#	depends="OpenCL-ICD-Loader>=${version}_${revision}"
+#	short_desc+=" (transitional dummy package)"
+#}
+#
+#opencl2-headers_package() {
+#	build_style=meta
+#	depends="OpenCL-Headers>=${version}_${revision}"
+#	short_desc+=" (transitional dummy package)"
+#}
+#
+#OpenCL-Headers_package() {
+#	short_desc="Khronos OpenCL (Open Computing Language) header files"
+#	pkg_install() {
+#		vmove usr/include/CL/opencl.h
+#		vmove usr/include/CL/cl.h
+#		vmove "usr/include/CL/cl_*"
+#		vmove usr/share/cmake/OpenCLHeaders
+#		vmove usr/share/pkgconfig/OpenCL-Headers.pc
+#	}
+#}
+
+#OpenCL-ICD-Loader_package() {
+#	short_desc="Khronos OpenCL (Open Computing Language) Loader"
+#	pkg_install() {
+#	}
+#}
