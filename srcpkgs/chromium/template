@@ -2,10 +2,10 @@
 pkgname=chromium
 # See https://chromiumdash.appspot.com/releases?platform=Linux for the latest version
 version=120.0.6099.129
-revision=1
+revision=2
 archs="i686* x86_64* aarch64* armv7l*"
 hostmakedepends="
- $(vopt_if clang "clang lld llvm15")
+ $(vopt_if clang "clang lld llvm")
  bison git gperf hwids ninja nodejs perl pkg-config python3
  libepoxy-devel libevent-devel libglib-devel"
 makedepends="
