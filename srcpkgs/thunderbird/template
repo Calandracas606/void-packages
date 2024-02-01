@@ -29,6 +29,8 @@ depends="nss>=3.72 nspr>=4.32 desktop-file-utils hicolor-icon-theme libotr"
 build_options="alsa jack dbus pulseaudio xscreensaver sndio wayland"
 build_options_default="alsa jack dbus pulseaudio xscreensaver sndio wayland"
 
+broken="python3.12: 'pkgutil' has no attribute 'ImpImporter'. Did you mean: 'zipimporter'"
+
 case $XBPS_TARGET_MACHINE in
 	armv[56]*) broken="required NEON extensions are not supported on armv6" ;;
 	ppc64*) ;;
