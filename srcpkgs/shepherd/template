@@ -1,0 +1,22 @@
+# Template file for 'shepherd'
+pkgname=shepherd
+version=0.10.3
+revision=1
+#archs="i686 x86_64"
+#build_wrksrc=
+build_style=gnu-configure
+#configure_args=""
+#make_build_args=""
+#make_install_args=""
+#conf_files=""
+#make_dirs="/var/log/dir 0755 root root"
+hostmakedepends="pkg-config "
+makedepends="guile-devel"
+depends=""
+short_desc="GNU Shepherd is a service manager"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="GPL-3.0-or-later"
+homepage="https://www.gnu.org/software/shepherd/"
+#changelog=""
+distfiles="https://ftp.gnu.org/gnu/shepherd/shepherd-${version}.tar.gz"
+checksum=8ec6febeb030bb52e84c623f1029ca71c2c2125151561c59145daa6e3b85afef
