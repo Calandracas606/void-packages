@@ -1,0 +1,22 @@
+# Template file for 'Fibers'
+pkgname=Fibers
+version=1.3.1
+revision=1
+#archs="i686 x86_64"
+#build_wrksrc=
+build_style=gnu-configure
+#configure_args=""
+#make_build_args=""
+#make_install_args=""
+#conf_files=""
+#make_dirs="/var/log/dir 0755 root root"
+hostmakedepends="pkg-config"
+makedepends="guile-devel"
+depends=""
+short_desc="Go-like concurrency for Guile Scheme"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="GPL-3.0-or-later"
+homepage="https://github.com/wingo/fibers"
+#changelog=""
+distfiles="https://github.com/wingo/fibers/releases/download/v${version}/fibers-${version}.tar.gz"
+checksum=a5e1a9c49c0efe7ac6f355662041430d4b64e59baa538d2b8fb5ef7528d81dbf
