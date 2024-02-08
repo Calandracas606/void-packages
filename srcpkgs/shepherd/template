@@ -10,9 +10,9 @@ build_style=gnu-configure
 #make_install_args=""
 #conf_files=""
 #make_dirs="/var/log/dir 0755 root root"
-hostmakedepends="pkg-config "
-makedepends="guile-devel"
-depends=""
+hostmakedepends="pkg-config"
+makedepends="guile-devel Fibers"
+depends="guile"
 short_desc="GNU Shepherd is a service manager"
 maintainer="Daniel Martinez <danielmartinez@cock.li>"
 license="GPL-3.0-or-later"
@@ -20,3 +20,14 @@ homepage="https://www.gnu.org/software/shepherd/"
 #changelog=""
 distfiles="https://ftp.gnu.org/gnu/shepherd/shepherd-${version}.tar.gz"
 checksum=8ec6febeb030bb52e84c623f1029ca71c2c2125151561c59145daa6e3b85afef
+
+post_install() {
+	rm ${DESTDIR}/usr/bin/shutdown
+	rm ${DESTDIR}/usr/bin/halt
+	rm ${DESTDIR}/usr/bin/reboot
+	rm ${DESTDIR}/usr/share/man/man8/halt.8
+	rm ${DESTDIR}/usr/share/man/man8/reboot.8
+	vmkdir usr/share/bash-completion/completions
+	mv ${DESTDIR}/etc/bash_completion.d/* \
+		${DESTDIR}/usr/share/bash-completion/completions
+}
