@@ -1,0 +1,22 @@
+# Template file for 'Swaysome'
+pkgname=Swaysome
+version=2.1.0
+revision=1
+#archs="i686 x86_64"
+#build_wrksrc=
+build_style=cargo
+#configure_args=""
+#make_build_args=""
+#make_install_args=""
+#conf_files=""
+#make_dirs="/var/log/dir 0755 root root"
+hostmakedepends=""
+makedepends=""
+depends=""
+short_desc="An awesome way to manage your workspaces on sway"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="MIT"
+homepage="https://gitlab.com/hyask/swaysome"
+#changelog=""
+distfiles="https://gitlab.com/hyask/swaysome/-/archive/2.1.0/swaysome-2.1.0.tar.gz"
+checksum=477e35d3c2302c928a823b4a232d304c42b921328362afb3fecdfe6d1479856c
