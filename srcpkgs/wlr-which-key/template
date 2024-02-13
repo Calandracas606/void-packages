@@ -1,0 +1,22 @@
+# Template file for 'wlr-which-key'
+pkgname=wlr-which-key
+version=0.1.1
+revision=1
+#archs="i686 x86_64"
+#build_wrksrc=
+build_style=cargo
+#configure_args=""
+#make_build_args=""
+#make_install_args=""
+#conf_files=""
+#make_dirs="/var/log/dir 0755 root root"
+hostmakedepends="pkg-config"
+makedepends="cairo-devel pango-devel libxkbcommon-devel"
+depends=""
+short_desc="Keymap manager for wlroots-based compositors"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="GPL-3.0-or-later"
+homepage="https://github.com/MaxVerevkin/wlr-which-key"
+#changelog=""
+distfiles="https://github.com/MaxVerevkin/wlr-which-key/archive/refs/tags/v${version}.tar.gz"
+checksum=f0194cdbc4fd5b24d6085e0408c755c785e3acdf9b4ffb1fb3d41bf10cdc6337
