@@ -1,0 +1,27 @@
+# Template file for 'base-systemd'
+pkgname=base-systemd
+version=0.114
+revision=1
+build_style=meta
+short_desc="Void Linux base system meta package - systemd"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="Public Domain"
+homepage="https://www.voidlinux.org"
+
+depends="
+ base-files>=0.77 ncurses coreutils findutils diffutils libgcc
+ dash bash grep gzip file sed gawk less util-linux which tar man-pages
+ mdocml>=1.13.3 shadow e2fsprogs btrfs-progs xfsprogs f2fs-tools dosfstools
+ procps-ng tzdata pciutils usbutils iana-etc openssh dhcpcd
+ kbd iproute2 iputils iw wpa_supplicant xbps nvi sudo wifi-firmware
+ void-artwork traceroute ethtool kmod acpid removed-packages
+ systemd dracut-systemd runit-systemd dbus-systemd"
+
+case "$XBPS_TARGET_MACHINE" in
+	*-musl) depends+=" musl";;
+	*) depends+=" glibc-locales";;
+esac
+
+case "$XBPS_TARGET_MACHINE" in
+	i686*|x86_64*|ppc*) depends+=" linux";;
+esac

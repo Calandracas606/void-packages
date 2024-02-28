@@ -1,0 +1,8 @@
+[Service]
+Type=exec
+ExecStartPre=/etc/runit/1
+ExecStart=/etc/runit/2
+ExecStop=/etc/runit/3
+
+[Install]
+WantedBy=basic.target

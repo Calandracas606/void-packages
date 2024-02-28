@@ -1,0 +1,61 @@
+# Template file for 'dbus-systemd'
+pkgname=dbus-systemd
+version=1.15.8
+revision=1
+build_style=meson
+#configure_args="-Dsystemd=enabled -Dapparmor=enabled"
+#configure_args="--disable-selinux --enable-inotify --with-dbus-user=dbus
+# --enable-xml-docs --enable-epoll
+# --disable-asserts --disable-systemd --disable-user-session
+# --with-system-socket=/run/dbus/system_bus_socket --disable-doxygen-docs
+# --with-system-pid-file=/run/dbus/pid --with-console-auth-dir=/run/console"
+hostmakedepends="gperf intltool pkg-config xmlto"
+makedepends="expat-devel libX11-devel libcap-devel systemd-devel libxslt-devel libapparmor-devel
+libaudit-devel libcap-ng-devel libselinux-devel glib-devel"
+short_desc="Message bus system"
+maintainer="Orphaned <orphan@voidlinux.org>"
+license="GPL-2.0-or-later"
+homepage="https://dbus.freedesktop.org/"
+#changelog="https://gitlab.freedesktop.org/dbus/dbus/-/raw/dbus-1.14/NEWS"
+distfiles="https://dbus.freedesktop.org/releases/dbus/dbus-${version}.tar.xz"
+checksum=84fc597e6ec82f05dc18a7d12c17046f95bad7be99fc03c15bc254c4701ed204
+python_version=3
+conf_files="/etc/dbus-1/*.conf"
+
+provides="dbus-${version}_${revision} dbus-libs-${version}_${revision}"
+#replaces="dbus>=0 dbus-libs>=0"
+# Create dbus:22 system account.
+system_accounts="dbus:22"
+
+post_install() {
+	vsv dbus
+}
+
+dbus-systemd-devel_package() {
+	depends="expat-devel dbus-systemd>=${version}_${revision}"
+	short_desc+=" - development files"
+	pkg_install() {
+		vmove usr/include
+		vmove "usr/lib/dbus-*"
+		vmove usr/lib/pkgconfig
+#		vmove "usr/lib/*.a"
+		vmove "usr/lib/*.so"
+		vmove usr/share/doc
+		vmove usr/lib/cmake
+	}
+}
+
+#dbus-libs_package() {
+#	short_desc+=" - shared libraries"
+#	pkg_install() {
+#		vmove "usr/lib/*.so.*"
+#	}
+#}
+#
+#dbus-x11_package() {
+#	short_desc+=" - X11 support"
+#	pkg_install() {
+#		vmove usr/bin/dbus-launch
+#		vmove usr/share/man/man1/dbus-launch.1
+#	}
+#}

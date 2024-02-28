@@ -1,7 +1,7 @@
 # Template file for 'dracut'
 pkgname=dracut
 version=059
-revision=7
+revision=8
 build_style=configure
 configure_args="--prefix=/usr --sysconfdir=/etc"
 conf_files="/etc/dracut.conf"
@@ -19,7 +19,7 @@ alternatives="
  initramfs:/etc/kernel.d/post-install/20-initramfs:/usr/libexec/dracut/kernel-hook-postinst
  initramfs:/etc/kernel.d/post-remove/20-initramfs:/usr/libexec/dracut/kernel-hook-postrm
 "
-subpackages="dracut-network"
+subpackages="dracut-network dracut-systemd"
 # Checks require distfiles come from a git repository
 make_check=no
 
@@ -47,16 +47,6 @@ post_install() {
 	vinstall ${FILESDIR}/kernel-hook-postinst 755 usr/libexec/dracut
 	vinstall ${FILESDIR}/kernel-hook-postrm 755 usr/libexec/dracut
 
-	# We don't need the systemd stuff.
-	rm -r ${DESTDIR}/usr/lib/dracut/modules.d/*systemd*
-
-	# systemd dependent additional dracut modules
-	for f in 06rngd 06dbus-broker 06dbus-daemon 09dbus \
-		35connman 35network-manager 35network-wicked 80lvmmerge \
-		99memstrack 99squash; do
-		rm -r ${DESTDIR}/usr/lib/dracut/modules.d/${f}
-	done
-
 	# don't need s390x architecture dependent dracut modules
 	for f in 80cms 81cio_ignore 91zipl 95dasd 95dasd_mod \
 		95dasd_rules 95dcssblk 95qeth_rules 95zfcp \
@@ -64,11 +54,6 @@ post_install() {
 		rm -r ${DESTDIR}/usr/lib/dracut/modules.d/${f}
 	done
 
-	# ifcfg network-scripts dependent (RHEL-derived)
-	rm -r ${DESTDIR}/usr/lib/dracut/modules.d/45ifcfg
-
-	rm ${DESTDIR}/usr/share/man/man8/*.service.*
-	rm -r ${DESTDIR}/usr/lib/kernel
 }
 
 dracut-network_package() {
@@ -92,5 +77,26 @@ dracut-uefi_package() {
 		vinstall ${FILESDIR}/dracut-uefi-hook.confd 644 etc/default dracut-uefi-hook
 		vinstall ${FILESDIR}/kernel-uefi-hook-postinst 755 etc/kernel.d/post-install 20-dracut-uefi
 		vinstall ${FILESDIR}/kernel-uefi-hook-postrm 755 etc/kernel.d/post-remove 20-dracut-uefi
+	}
+}
+
+dracut-systemd_package() {
+	depends="dhclient ${sourcepkg}-${version}_${revision}"
+	short_desc+=" - systemd modules"
+	pkg_install() {
+		vmove "usr/lib/dracut/modules.d/*systemd*"
+
+		# systemd dependent additional dracut modules
+		for f in 06rngd 06dbus-broker 06dbus-daemon 09dbus \
+			35connman 35network-manager 35network-wicked 80lvmmerge \
+			99memstrack 99squash; do
+			vmove usr/lib/dracut/modules.d/${f}
+		done
+
+		# ifcfg network-scripts dependent (RHEL-derived)
+		vmove usr/lib/dracut/modules.d/45ifcfg
+
+		vmove "usr/share/man/man8/*.service.*"
+		vmove usr/lib/kernel
 	}
 }
