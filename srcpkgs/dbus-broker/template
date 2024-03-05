@@ -2,17 +2,12 @@
 pkgname=dbus-broker
 version=35
 revision=1
-#archs="i686 x86_64"
-#build_wrksrc=
 build_style=meson
-#configure_args=""
-#make_build_args=""
-#make_install_args=""
-#conf_files=""
-#make_dirs="/var/log/dir 0755 root root"
+configure_args="-Dlauncher=true -Dlinux-4-17=true -Dapparmor=true -Daudit=true"
 hostmakedepends="pkg-config"
-makedepends="systemd-devel"
-depends=""
+makedepends="c-dvar-devel c-ini-devel c-shquote-devel libapparmor-devel libcap-ng-devel libaudit-devel
+ dbus-systemd-devel systemd-devel"
+depends="dbus-systemd"
 short_desc="Linux D-Bus Message Broker"
 maintainer="Daniel Martinez <danielmartinez@cock.li>"
 license="Apache 2.0"
@@ -20,15 +15,3 @@ homepage="https://github.com/bus1/dbus-broker"
 changelog="https://raw.githubusercontent.com/bus1/dbus-broker/v${version}/NEWS.md"
 distfiles="https://github.com/bus1/dbus-broker/archive/refs/tags/v${version}.tar.gz"
 checksum=083cee7818965aac233e73346d36dc6f7cca8cf16f41c94274a089a0fe6c0b25
-
-dbus-broker-devel_package() {
-	depends="${sourcepkg}>=${version}_${revision}"
-	short_desc+=" - development files"
-	pkg_install() {
-		vmove usr/share/man/man3
-		vmove usr/include
-		vmove usr/lib/pkgconfig
-		vmove "usr/lib/*.a"
-		vmove "usr/lib/*.so"
-	}
-}
