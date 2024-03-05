@@ -1,0 +1,25 @@
+# Template file for 'c-rbtree'
+pkgname=c-rbtree
+version=3.2.0
+revision=1
+build_style=meson
+hostmakedepends="pkg-config"
+makedepends="c-stdaux"
+short_desc="Intrusive Red-Black Tree Collection"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="Apache-2.0 LGPL-2.1-or-later"
+homepage="https://c-util.github.io/c-rbtree/"
+changelog="https://raw.githubusercontent.com/c-util/c-rbtree/v${version}/NEWS.md"
+distfiles="https://github.com/c-util/c-rbtree/archive/refs/tags/v${version}.tar.gz"
+checksum=5440bdce011e37c63e5b8b56c1ecbefc26b08d3e83c9fa2cb94762e7a6fc8749
+
+c-rbtree-devel_package() {
+	depends="${sourcepkg}>=${version}_${revision} ${makedepends}"
+	short_desc+=" - development files"
+	pkg_install() {
+		vmove usr/include
+		vmove usr/lib/pkgconfig
+		vmove "usr/lib/*.a"
+		vmove "usr/lib/*.so"
+	}
+}
