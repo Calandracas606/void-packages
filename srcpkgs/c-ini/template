@@ -1,0 +1,25 @@
+# Template file for 'c-ini'
+pkgname=c-ini
+version=1.1.0
+revision=1
+build_style=meson
+hostmakedepends="pkg-config"
+makedepends="c-list c-utf8-devel c-rbtree-devel"
+short_desc="Ini-File Handling"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="Apache-2.0 LGPL-2.1-or-later"
+homepage="https://c-util.github.io/c-ini/"
+changelog="https://raw.githubusercontent.com/c-util/c-ini/v${version}/NEWS.md"
+distfiles="https://github.com/c-util/c-ini/archive/refs/tags/v${version}.tar.gz"
+checksum=df01f3e2bd20a3857d9b9d7e4d13c6bf6cda69580ca110e7e41f14ad5423c950
+
+c-ini-devel_package() {
+	depends="${sourcepkg}>=${version}_${revision} ${makedepends}"
+	short_desc+=" - development files"
+	pkg_install() {
+		vmove usr/include
+		vmove usr/lib/pkgconfig
+		vmove "usr/lib/*.a"
+		vmove "usr/lib/*.so"
+	}
+}
