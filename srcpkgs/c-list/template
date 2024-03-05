@@ -1,0 +1,13 @@
+# Template file for 'c-list'
+pkgname=c-list
+version=3.1.0
+revision=1
+build_style=meson
+hostmakedepends="pkg-config"
+short_desc="Circular Intrusive Double Linked List Collection"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="Apache-2.0 LGPL-2.1-or-later"
+homepage="https://c-util.github.io/c-list/"
+changelog="https://raw.githubusercontent.com/c-util/c-list/v${version}/NEWS.md"
+distfiles="https://github.com/c-util/c-list/archive/refs/tags/v${version}.tar.gz"
+checksum=7d5b12166859bd729404cba8da575ae47952cbb97d650c5bbe50559c03631e4b
