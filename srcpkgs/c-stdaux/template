@@ -1,0 +1,13 @@
+# Template file for 'c-stdaux'
+pkgname=c-stdaux
+version=1.5.0
+revision=1
+build_style=meson
+hostmakedepends="pkg-config"
+short_desc="Auxiliary macros and functions for the C standard library"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="Apache-2.0 LGPL-2.1-or-later"
+homepage="https://c-util.github.io/c-stdaux/"
+changelog="https://raw.githubusercontent.com/c-util/c-stdaux/v${version}/NEWS.md"
+distfiles="https://github.com/c-util/c-stdaux/archive/refs/tags/v${version}.tar.gz"
+checksum=19fb163160c25babf1f2ecf817e6eb696decfb5e33490dcd9cf68c2ecae97d13
