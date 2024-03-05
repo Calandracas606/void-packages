@@ -4505,3 +4505,4 @@ libKPim6MimeTreeParserWidgets.so.6 mimetreeparser-24.02.0_1
 libsystemd.so.0 systemd-255.4_1
 libcutf8-1.so.0 c-utf8-1.1.0_1
 libcrbtree-3.so.0 c-rbtree-3.2.0_1
+libcdvar-1.so.0 c-dvar-1.1.0_1

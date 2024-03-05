@@ -1,0 +1,25 @@
+# Template file for 'c-dvar'
+pkgname=c-dvar
+version=1.1.0
+revision=1
+build_style=meson
+hostmakedepends="pkg-config"
+makedepends="c-stdaux c-utf8-devel"
+short_desc="D-Bus Variant Type-System"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="Apache-2.0 LGPL-2.1-or-later"
+homepage="https://c-util.github.io/c-dvar/"
+changelog="https://raw.githubusercontent.com/c-util/c-dvar/v${version}/NEWS.md"
+distfiles="https://github.com/c-util/c-dvar/archive/refs/tags/v${version}.tar.gz"
+checksum=fa4b697532b6c56929106747eabd8cde792a280aa18883b2507037905e7547df
+
+c-dvar-devel_package() {
+	depends="${sourcepkg}>=${version}_${revision} ${makedepends}"
+	short_desc+=" - development files"
+	pkg_install() {
+		vmove usr/include
+		vmove usr/lib/pkgconfig
+		vmove "usr/lib/*.a"
+		vmove "usr/lib/*.so"
+	}
+}
