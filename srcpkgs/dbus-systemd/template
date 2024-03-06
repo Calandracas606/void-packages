@@ -11,7 +11,7 @@ build_style=meson
 # --with-system-pid-file=/run/dbus/pid --with-console-auth-dir=/run/console"
 hostmakedepends="gperf intltool pkg-config xmlto"
 makedepends="expat-devel libX11-devel libcap-devel systemd-devel libxslt-devel libapparmor-devel
-libaudit-devel libcap-ng-devel libselinux-devel glib-devel"
+libaudit-devel libcap-ng-devel glib-devel"
 short_desc="Message bus system"
 maintainer="Orphaned <orphan@voidlinux.org>"
 license="GPL-2.0-or-later"
@@ -26,10 +26,6 @@ provides="dbus-${version}_${revision} dbus-libs-${version}_${revision}"
 #replaces="dbus>=0 dbus-libs>=0"
 # Create dbus:22 system account.
 system_accounts="dbus:22"
-
-post_install() {
-	vsv dbus
-}
 
 dbus-systemd-devel_package() {
 	depends="expat-devel dbus-systemd>=${version}_${revision}"

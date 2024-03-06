@@ -15,7 +15,7 @@ depends="
  procps-ng tzdata pciutils usbutils iana-etc openssh dhcpcd
  kbd iproute2 iputils iw wpa_supplicant xbps nvi sudo wifi-firmware
  void-artwork traceroute ethtool kmod acpid removed-packages
- systemd dracut-systemd runit-systemd dbus-systemd"
+ systemd dracut-systemd runit-systemd dbus-systemd systemd-udev systemd-logind"
 
 case "$XBPS_TARGET_MACHINE" in
 	*-musl) depends+=" musl";;
