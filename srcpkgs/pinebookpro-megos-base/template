@@ -1,0 +1,57 @@
+# Template file for 'pinebookpro-megos-base'
+pkgname=pinebookpro-megos-base
+version=6.8
+revision=1
+archs="aarch64*"
+depends="pinebookpro-megos-kernel pinebookpro-megos-uboot dracut alsa-ucm-conf"
+short_desc="Void Linux Pinebook Pro platform package - megos version"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="GPL-2.0-or-later"
+homepage="https://xnux.eu/log/index.html"
+changelog="https://xff.cz/kernels/NEWS-${version}"
+distfiles="https://xff.cz/kernels/${version}/pbp.tar.gz"
+checksum=245799f7c1054fa880b1e12dc74ef805239af68c4422a79df641952277cbaeee
+
+_kernver="${version}_${revision}"
+preserve=yes
+
+do_install() {
+	vinstall "${FILESDIR}/60-pinebookpro.rules" 644 usr/lib/udev/rules.d
+	vinstall "${FILESDIR}/10-pinebookpro.hwdb" 644 usr/lib/udev/hwdb.d
+
+	rm modules/lib/modules/*/build
+	vmkdir usr/src
+	vcopy "headers/*" usr/src/kernel-headers-${_kernver}
+	vmkdir usr/lib/modules/${_kernver}
+	ln -s ../../..//src/kernel-headers-${_kernver} \
+		${DESTDIR}/usr/lib/modules/${_kernver}/build
+}
+
+pinebookpro-megos-kernel_package() {
+	short_desc+=" - kernel"
+	triggers="kernel-hooks"
+	kernel_hooks_version="${_kernver}"
+	pkg_install() {
+		vinstall Image 644 boot vmlinux-${_kernver}
+		vmkdir usr/lib/modules
+		vcopy "modules/lib/modules/*" usr/lib/modules/${_kernver}
+	}
+}
+
+pinebookpro-megos-kernel-headers_package() {
+	short_desc+=" - kernel headers"
+	pkg_install() {
+		vmove usr/src/kernel-headers-${_kernver}
+		vmove usr/lib/modules/${_kernver}/build
+	}
+}
+
+pinebookpro-megos-uboot_package() {
+	depends="u-boot-tools"
+	short_desc+=" - uboot files"
+	pkg_install() {
+		vinstall board.dtb 644 boot/dtbs/dtbs-${_kernver}
+		vinstall "${FILESDIR}/kernel.d/uboot" 750 \
+			etc/kernel.d/post-install 60-uboot
+	}
+}
