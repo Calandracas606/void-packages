@@ -1,0 +1,47 @@
+diff --git a/libhsakmt/src/libhsakmt.h b/libhsakmt/src/libhsakmt.h
+index 63ef17d9..e91f0632 100644
+--- a/libhsakmt/src/libhsakmt.h
++++ b/libhsakmt/src/libhsakmt.h
+@@ -67,9 +67,11 @@ extern HsaVersionInfo hsakmt_kfd_version_info;
+ /* Might be defined in limits.h on platforms where it is constant (used by musl) */
+ /* See also: https://pubs.opengroup.org/onlinepubs/7908799/xsh/limits.h.html */
+ #ifndef PAGE_SIZE
+-extern int hsakmt_page_size;
+ #define PAGE_SIZE hsakmt_page_size
++#else
++#define HAS_PAGE_SIZE 1
+ #endif
++extern int hsakmt_page_size;
+ #ifndef PAGE_SHIFT
+ extern int hsakmt_page_shift;
+ #define PAGE_SHIFT hsakmt_page_shift
+diff --git a/libhsakmt/src/openclose.c b/libhsakmt/src/openclose.c
+index a0280489..2aad22ae 100644
+--- a/libhsakmt/src/openclose.c
++++ b/libhsakmt/src/openclose.c
+@@ -114,7 +114,11 @@ static void clear_after_fork(void)
+ 
+ static inline void init_page_size(void)
+ {
++#ifdef HAS_PAGE_SIZE
++	hsakmt_page_size = PAGE_SIZE;
++#else
+ 	hsakmt_page_size = sysconf(_SC_PAGESIZE);
++#endif
+ 	hsakmt_page_shift = ffs(hsakmt_page_size) - 1;
+ }
+ 
+diff --git a/runtime/hsa-runtime/core/util/locks.h b/runtime/hsa-runtime/core/util/locks.h
+index 6c0de49a..c04716f8 100644
+--- a/runtime/hsa-runtime/core/util/locks.h
++++ b/runtime/hsa-runtime/core/util/locks.h
+@@ -72,7 +72,9 @@ class HybridMutex {
+     while (!lock_.compare_exchange_strong(old, 1)) {
+       cnt--;
+       if (cnt > maxSpinIterPause) {
++#if defined(__x86_64__)
+         _mm_pause();
++#endif
+       } else if (cnt-- > maxSpinIterYield) {
+         os::YieldThread();
+       } else {
