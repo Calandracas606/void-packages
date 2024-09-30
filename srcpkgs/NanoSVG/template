@@ -1,0 +1,11 @@
+# Template file for 'NanoSVG'
+pkgname=NanoSVG
+version=2023.12.02
+revision=1
+build_style=cmake
+short_desc="Simple stupid SVG parser"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="Zlib"
+homepage="https://github.com/fltk/nanosvg/"
+distfiles="https://github.com/fltk/nanosvg/archive/refs/tags/fltk_${version//./-}.tar.gz"
+checksum=7f3d654c91169499466bdd43b914175c58811bb7e41a55f98c90902250e7ef8e
