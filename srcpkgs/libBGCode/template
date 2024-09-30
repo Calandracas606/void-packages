@@ -1,0 +1,29 @@
+# Template file for 'libBGCode'
+pkgname=libBGCode
+version=0.2.0
+revision=1
+# Repo has no tags, version from: https://raw.githubusercontent.com/prusa3d/PrusaSlicer/refs/tags/version_2.8.1/deps/%2BLibBGCode/LibBGCode.cmake
+_git_ref=b5c57c423c958a78dacae468aeee63ab3d2de947
+build_style=cmake
+configure_args="-DLibBGCode_BUILD_TESTS=OFF" # Tests require deps we dont have
+makedepends="heatshrink-devel zlib-devel boost-devel"
+short_desc="Prusa Block & Binary G-code reader / writer / converter"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="AGPL-3.0-only"
+homepage="https://github.com/prusa3d/libbgcode"
+distfiles="https://github.com/prusa3d/libbgcode/archive/${_git_ref}.tar.gz"
+checksum=c930bbcf91729694ba6938f94976ad038334f6fe7119a8152d968c3b6265f55b
+
+post_install() {
+	vlicense LICENSE
+}
+
+libBGCode-devel_package() {
+	depends="${sourcepkg}>=${version}_${revision} heatshrink-devel"
+	short_desc+=" - development files"
+	pkg_install() {
+		vmove usr/include
+		vmove usr/lib/cmake
+		vmove "usr/lib/*.a"
+	}
+}
