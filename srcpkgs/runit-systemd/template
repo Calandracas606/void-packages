@@ -1,0 +1,79 @@
+# Template file for 'runit-systemd'
+pkgname=runit-systemd
+version=20231124
+revision=1
+build_style=gnu-makefile
+short_desc="Void Linux runit scripts"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="CC0-1.0"
+homepage="https://github.com/void-linux/void-runit"
+distfiles="https://github.com/void-linux/void-runit/archive/refs/tags/${version}.tar.gz"
+checksum=2bdb86a08ee0ee70d1a189ebbf9e60157f847e8c8f75caedc009536ca794a77c
+
+depends="virtual?awk procps-ng runit"
+conf_files="
+ /etc/hostname
+ /etc/locale.conf
+ /etc/rc.conf
+ /etc/rc.local
+ /etc/rc.shutdown
+ /etc/sv/agetty-console/conf
+ /etc/sv/agetty-serial/conf
+ /etc/sv/agetty-tty1/conf
+ /etc/sv/agetty-hvc0/conf
+ /etc/sv/agetty-hvsi0/conf"
+
+make_dirs="
+ /etc/zzz.d/suspend 0755 root root
+ /etc/zzz.d/resume 0755 root root"
+
+post_install() {
+	vmkdir usr/bin
+	mv ${DESTDIR}/usr/sbin/* ${DESTDIR}/usr/bin
+	vconf ${FILESDIR}/hostname
+	vconf ${FILESDIR}/locale.conf
+#	vinstall ${FILESDIR}/apparmor 644 /etc/default/
+#	vinstall ${FILESDIR}/09-apparmor.sh 644 /etc/runit/core-services/
+#	vmkdir usr/lib
+	# Enable services at post-install time instead.
+#	rm -f ${DESTDIR}/etc/runit/runsvdir/current
+#	rm -rf ${DESTDIR}/etc/runit/runsvdir/default
+#	rm -rf ${DESTDIR}/etc/runit/runsvdir/single
+
+	rm -f ${DESTDIR}/usr/bin/halt
+	rm -f ${DESTDIR}/usr/bin/shutdown
+	rm -f ${DESTDIR}/usr/bin/poweroff
+	rm -f ${DESTDIR}/usr/bin/reboot
+	rm -f ${DESTDIR}/etc/runit/core-services/02-udev.sh
+	rm -f ${DESTDIR}/usr/lib/dracut/dracut.conf.d/10-runit-void.conf
+
+	vmkdir /usr/lib/systemd/system/basic.target.wants
+	vcopy ${FILESDIR}/runit-void.service usr/lib/systemd/system/
+	ln -s /usr/lib/systemd/system/runit-void.service ${DESTDIR}/usr/lib/systemd/system/basic.target.wants/
+
+	rm -f ${DESTDIR}/usr/share/man/man8/reboot.8
+	rm -f ${DESTDIR}/usr/share/man/man8/halt.8
+	rm -f ${DESTDIR}/usr/share/man/man8/poweroff.8
+	rm -f ${DESTDIR}/usr/share/man/man8/shutdown.8
+
+	ln -s /usr/bin/systemctl     ${DESTDIR}/usr/bin/halt
+	ln -s ../lib/systemd/systemd ${DESTDIR}/usr/bin/init
+	ln -s /usr/bin/systemctl     ${DESTDIR}/usr/bin/poweroff
+	ln -s /usr/bin/systemctl     ${DESTDIR}/usr/bin/reboot
+	ln -s /usr/bin/systemctl     ${DESTDIR}/usr/bin/runlevel
+	ln -s /usr/bin/systemctl     ${DESTDIR}/usr/bin/shutdown
+	ln -s /usr/bin/systemctl     ${DESTDIR}/usr/bin/telinit
+
+
+
+}
+
+#runit-void-apparmor_package() {
+#	short_desc+=" - AppArmor initialization"
+#	depends="${sourcepkg}-${version}_${revision}"
+#	conf_files="/etc/default/apparmor"
+#	pkg_install() {
+#		vmove etc/default/apparmor
+#		vmove etc/runit/core-services/09-apparmor.sh
+#	}
+#}
