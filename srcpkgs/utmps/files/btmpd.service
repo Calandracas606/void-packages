@@ -1,0 +1,17 @@
+[Unit]
+Description=s6-utmps secure BTMP service
+Documentation=https://www.skarnet.org/software/utmps/
+Before=systemd-update-utmp.service systemd-logind.service
+
+[Service]
+Type=exec
+RuntimeDirectory=utmps
+RuntimeDirectoryPreserve=yes
+WorkingDirectory=-/run/utmps
+ExecStart=/bin/s6-ipcserver -1 -- .btmpd-socket /bin/utmps-btmpd
+User=_utmp
+Group=_utmp
+
+[Install]
+WantedBy=basic.target
+RequiredBy=multi-user.target systemd-logind.service

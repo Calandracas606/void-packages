@@ -1,0 +1,15 @@
+diff --git a/configure b/configure
+index 9346a54..c5d4fea 100755
+--- a/configure
++++ b/configure
+@@ -331,10 +331,6 @@ if test ! -d $sysdeps || test ! -f $sysdeps/target ; then
+   echo "$0: error: $sysdeps is not a valid sysdeps directory"
+   exit 1
+ fi
+-if [ "x$target" != "x$(cat $sysdeps/target)" ] ; then
+-  echo "$0: error: target $target does not match the contents of $sysdeps/target"
+-  exit 1
+-fi
+ 
+ if $allpic ; then
+   tryflag CPPFLAGS_AUTO -fPIC

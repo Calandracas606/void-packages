@@ -1,0 +1,53 @@
+# Template file for 'utmps'
+pkgname=utmps
+version=0.1.2.2
+revision=1
+#archs="i686 x86_64"
+#build_wrksrc=
+build_style=gnu-configure
+configure_args="--enable-shared --enable-allstatic --enable-static-libc
+ --prefix=/usr --libdir=/usr/lib
+ --with-sysdeps=${XBPS_CROSS_BASE}/usr/lib/skalibs/sysdeps
+ --with-lib=${XBPS_CROSS_BASE}/usr/lib"
+#make_build_args=""
+#make_install_args=""
+#conf_files=""
+#make_dirs="/var/log/dir 0755 root root"
+hostmakedepends=""
+makedepends="skalibs-devel"
+depends=""
+short_desc="A secure utmp/wtmp implementation"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="ICS"
+homepage="https://skarnet.org/software/utmps/"
+#changelog=""
+distfiles="https://skarnet.org/software/utmps/utmps-${version}.tar.gz"
+checksum=f7ffa3714c65973bb95fbcf1501c06fc0478d93a51cea1b373ec6811c2425f52
+system_groups=_utmp
+system_accounts=_utmp
+
+
+#echo "if test $XBPS_TARGET_MACHINE"
+#if [ "$XBPS_TARGET_MACHINE" == "x86_64-musl" ]; then
+#	echo "set target"
+#	configure_args+=" --target=x86_64-linux-musl"
+#fi
+
+post_install() {
+	vmkdir usr/lib/systemd/system
+	for service in utmpd wtmpd btmpd; do
+		vinstall ${FILESDIR}/$service.service 0644 \
+			usr/lib/systemd/system/
+	done
+}
+
+utmps-devel_package() {
+	depends="${sourcepkg}>=${version}_${revision}"
+	short_desc+=" - development files"
+	pkg_install() {
+		vmove usr/include
+		vmove "usr/lib/*.a"
+		vmove "usr/lib/*.so"
+	}
+}
+
