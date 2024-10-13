@@ -21,6 +21,7 @@ configure_args="
  -Dsbat-distro-summary=VoidLinux
  -Dsbat-distro-pkgname=${pkgname}
  -Dsbat-distro-version=${version}_${revision}
+ -Dsplit-usr=false
  -Dsbat-distro-url=https://github.com/void-linux/void-packages/issues/
 
  -Ddbus-interfaces-dir=yes
@@ -58,6 +59,12 @@ configure_args="
  $(vopt_feature xkbcommon)
  $(vopt_feature pcre2)
  $(vopt_feature libarchive)
+ $(vopt_feature homed)
+ $(vopt_bool resolve)
+ $(vopt_bool nss nss-systemd)
+ $(vopt_bool nss nss-myhostname)
+ $(vopt_feature nss nss-mymachines)
+ $(vopt_feature nss nss-resolve)
 "
 #make_build_args=""
 #make_install_args=""
@@ -75,6 +82,8 @@ makedepends="
  gnu-efi-libs
  libcap-devel
  libmount-devel
+ utmps-devel
+ skalibs-devel
 
  $(vopt_if acl acl-devel)
  $(vopt_if apparmor libapparmor-devel)
@@ -111,6 +120,7 @@ makedepends="
  $(vopt_if libarchive libarchive-devel)"
 checkdepends="python3-pefile acl-progs"
 depends="
+ $(vopt_if resolve systemd-resolved)
  systemd-analyze
  systemd-binfmt
  systemd-boot
@@ -125,7 +135,6 @@ depends="
  systemd-logind
  systemd-oomd
  systemd-randomseed
- systemd-resolved
  systemd-sysusers
  systemd-tmpfiles
  systemd-udev
@@ -142,7 +151,7 @@ if [[ "$XBPS_TARGET_LIBC" == "glibc" ]]; then
 	makedepends+=" libxcrypt-devel"
 fi
 
-conflicts="dracut<060"
+#conflicts="dracut<060"
 
 conf_files="
  /etc/systemd/journald.conf
@@ -189,6 +198,9 @@ build_options="
  xkbcommon
  pcre2
  bpf
+ homed
+ resolve
+ nss
  libarchive"
 build_options_default="${build_options}"
 desc_option_apparmor="Enable support for appamor"
@@ -204,6 +216,70 @@ desc_option_pcre2="Enable support extended regexp using pcre2"
 
 if [[ "$build_option_bootloader" && ! "$build_option_efi" ]]; then
 	broken="bootloader build option requries efi build option"
+fi
+
+subpackages="libsystemd
+ libsystemd-devel
+ systemd-analyze
+ systemd-binfmt
+ systemd-boot
+ systemd-boot-efistub
+ systemd-coredump
+ systemd-cryptsetup
+ systemd-firstboot
+ $(vopt_if homed systemd-homed)
+ systemd-hostnamed
+ systemd-hwdb
+ systemd-journal-gatewayd
+ systemd-journal-remote
+ systemd-journal-upload
+ systemd-kernel-install
+ systemd-libudev
+ systemd-libudev-devel
+ systemd-localed
+ systemd-logind
+ systemd-machined
+ systemd-networkd
+ systemd-oomd
+ systemd-portabled
+ systemd-randomseed
+ systemd-repart
+ $(vopt_if resolve systemd-resolved)
+ systemd-sysext
+ systemd-sysusers
+ systemd-sysvcompat
+ systemd-timedated
+ systemd-timesyncd
+ systemd-tmpfiles
+ systemd-udev
+ systemd-ukify
+ systemd-userdbd
+ systemd-vconsole-setup
+"
+
+LDFLAGS+=" -lutmps -lskarnet"
+CFLAGS+=" -isystem ${XBPS_CROSS_BASE}/usr/include/utmps"
+CXXFLAGS+=" -isystem ${XBPS_CROSS_BASE}/usr/include/utmps"
+
+if [ "$XBPS_TARGET_LIBC" == "musl" ]; then
+	# makedepends+=" musl-nscd"
+	configure_args+=" -Dgshadow=false"
+	CFLAGS+=" -DSEEK_HOLE=4 -DSEEK_DATA=3"
+	CXXFLAGS+=" -DSEEK_HOLE=4 -DSEEK_DATA=3"
+else
+	#macros which are defined in <linux/if_arp.h> but not in <net/if_arp.h>
+	_if_arp_defs="
+	 -DARPHRD_PHONET=820
+	 -DARPHRD_PHONET_PIPE=821
+	 -DARPHRD_CAIF=822
+	 -DARPHRD_IP6GRE=823
+	 -DARPHRD_NETLINK=824
+	 -DARPHRD_6LOWPAN=825
+	 -DARPHRD_VSOCKMON=826"
+
+	CFLAGS+=" -Wno-error=format $_if_arp_defs"
+	CXXFLAGS+=" -Wno-error=format $_if_arp_defs"
+	makedepends+=" libxcrypt-devel"
 fi
 
 post_extract() {

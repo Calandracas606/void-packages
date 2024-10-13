@@ -1,0 +1,13 @@
+diff --git a/src/libsystemd/sd-daemon/sd-daemon.c b/src/libsystemd/sd-daemon/sd-daemon.c
+index 4945d82150..87aafdab4a 100644
+--- a/src/libsystemd/sd-daemon/sd-daemon.c
++++ b/src/libsystemd/sd-daemon/sd-daemon.c
+@@ -742,7 +742,7 @@ _public_ int sd_booted(void) {
+          * created. This takes place in mount-setup.c, so is
+          * guaranteed to happen very early during boot. */
+ 
+-        if (laccess("/run/systemd/system/", F_OK) >= 0)
++        if (access("/run/systemd/system/", F_OK) >= 0)
+                 return true;
+ 
+         if (errno == ENOENT)
