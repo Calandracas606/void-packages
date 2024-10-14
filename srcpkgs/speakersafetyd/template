@@ -13,13 +13,11 @@ distfiles="https://github.com/AsahiLinux/speakersafetyd/archive/refs/tags/${vers
 checksum=844ae3719c029e826f58c3799b6e358d189b0c42ade7a91f6c35b960cae35919
 make_dirs="/var/lib/speakersafetyd/blackbox 0755 root root"
 
-do_install() {
-	vbin target/${XBPS_RUST_TARGET}/release/speakersafetyd
-	vinstall 95-speakersafetyd.rules 644 usr/lib/udev/rules.d/
+post_install() {
 
-	for f in conf/apple/*; do
-		vinstall "$f" 644 usr/share/speakersafetyd/apple
-	done
+	DESTDIR="${DESTDIR}" make install
+
+	mv ${DESTDIR}/lib/* ${DESTDIR}/usr/lib
 
 	vlicense LICENSE
 	vsv speakersafetyd

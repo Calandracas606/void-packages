@@ -1,0 +1,12 @@
+diff --git a/Makefile b/Makefile
+index b7224d0..d96f3d0 100644
+--- a/Makefile
++++ b/Makefile
+@@ -13,7 +13,6 @@ all:
+ 
+ install: install-data
+ 	install -dDm0755 $(DESTDIR)/$(BINDIR)
+-	install -pm0755 target/release/speakersafetyd $(DESTDIR)/$(BINDIR)/speakersafetyd
+ 
+ install-data:
+ 	install -dDm0755 $(DESTDIR)/$(UNITDIR)
