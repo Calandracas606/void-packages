@@ -1,0 +1,77 @@
+# Template file for 'musl-mimalloc'
+pkgname=musl-mimalloc
+version=1.2.5
+_mimalloc_ver=2.1.7
+revision=1
+archs="*-musl"
+bootstrap=yes
+build_style=gnu-configure
+configure_args="--prefix=/usr --disable-gcc-wrapper --with-malloc=external"
+make_build_args="EXTRA_OBJ=src/malloc/external/mimalloc.o"
+short_desc="Musl C library - mimalloc"
+maintainer="Daniel Martinez danielmartinez@cock.li"
+license="MIT"
+homepage="https://musl.libc.org/"
+distfiles="https://musl.libc.org/releases/musl-${version}.tar.gz
+ https://github.com/microsoft/mimalloc/archive/refs/tags/v${_mimalloc_ver}.tar.gz"
+checksum="a9a118bbe84d8764da0ea0d28b3ab3fae8477fc7e4085d90102b8596fc7c75e4
+ 0eed39319f139afde8515010ff59baf24de9e47ea316a315398e8027d198202d"
+skip_extraction="v${_mimalloc_ver}.tar.gz"
+provides="musl-${version}_${revision}"
+replaces="musl>=0"
+
+nostrip_files="libc.so"
+shlib_provides="libc.so"
+
+if [ "$XBPS_TARGET_NO_ATOMIC8" ]; then
+	broken="64-bit atomics must be lock-free for now"
+fi
+
+post_extract() {
+	vsrcextract -C mimalloc v${_mimalloc_ver}.tar.gz
+	cp ${FILESDIR}/mimalloc-verify-syms.sh ${wrksrc}
+	cp ${FILESDIR}/mimalloc.c ${wrksrc}/mimalloc/src
+}
+
+post_build() {
+	$CC $CFLAGS $LDFLAGS -fpie ${FILESDIR}/getent.c -o getent
+	$CC $CFLAGS $LDFLAGS -fpie ${FILESDIR}/getconf.c -o getconf
+	$CC $CFLAGS $LDFLAGS -fpie ${FILESDIR}/iconv.c -o iconv
+	$CC $CFLAGS $LDFLAGS -fpie -c ${FILESDIR}/__stack_chk_fail_local.c -o __stack_chk_fail_local.o
+	$AR r libssp_nonshared.a __stack_chk_fail_local.o
+}
+
+do_install() {
+	# Move everything to /usr.
+	vmkdir usr/lib
+	ln -s usr/lib ${DESTDIR}/lib
+	make DESTDIR=${DESTDIR} install
+	rm ${DESTDIR}/lib
+	# provide ldd
+	vmkdir usr/bin
+	ln -s ../lib${XBPS_TARGET_WORDSIZE}/libc.so ${DESTDIR}/usr/bin/ldd
+	# additional utils from Alpine/NetBSD
+	vbin iconv
+	vbin getent
+	vman ${FILESDIR}/getent.1
+	vbin getconf
+	vman ${FILESDIR}/getconf.1
+	# additional symbols from libssp_nonshared (necessary on i386 and PPC)
+	vinstall libssp_nonshared.a 755 usr/lib
+	# Fake ldconfig
+	ln -s true ${DESTDIR}/usr/bin/ldconfig
+
+	vlicense COPYRIGHT
+}
+
+musl-mimalloc-devel_package() {
+	depends="kernel-libc-headers ${sourcepkg}-${version}_${revision}"
+	replaces="libssp-devel<=12.2.0_1"
+	conflicts="libssp-devel<=12.2.0_1"
+	short_desc+=" - development files"
+	pkg_install() {
+		vmove usr/include
+		vmove "usr/lib/*.a"
+		vmove "usr/lib/*.o"
+	}
+}
