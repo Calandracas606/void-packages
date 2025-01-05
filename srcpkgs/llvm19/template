@@ -1,7 +1,7 @@
 # Template file for 'llvm19'
 pkgname=llvm19
-version=19.1.4
-revision=2
+version=19.1.6
+revision=1
 build_wrksrc=llvm
 build_style=cmake
 _llvm_prefix=lib/llvm/19
@@ -44,6 +44,7 @@ configure_args="
  -DLLDB_PYTHON_EXT_SUFFIX=$_ext_suffix
  -DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR=NO
  -DLLVM_SPIRV=/usr/bin/llvm-spirv
+ -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD=SPIRV
 "
 hostmakedepends="perl python3 zlib-devel libffi-devel swig python3-Sphinx
  python3-recommonmark python3-sphinx-automodapi git python3-sphinx-markdown-tables python3-yaml pkg-config
@@ -56,7 +57,7 @@ maintainer="Daniel Martinez <danielmartinez@cock.li>"
 license="Apache-2.0 AND NCSA AND custom:Apache-2.0-with-llvm-exception"
 homepage="https://www.llvm.org"
 distfiles="https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-${version}.tar.gz"
-checksum=010e1fd3cabee8799bd2f8a6fbc68f28207494f315cf9da7057a2820f79fd531
+checksum=f07fdcbb27b2b67aa95e5ddadf45406b33228481c250e65175066d36536a1ee2
 conflicts="llvm18>=0 llvm17>=0 llvm15>=0"
 lib32disabled=yes
 python_version=3
