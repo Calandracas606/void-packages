@@ -1,0 +1,32 @@
+# Template file for 'ttf-ms-win11'
+pkgname=ttf-ms-win11
+version=26100.1742
+revision=1
+hostmakedepends="7zip wimlib"
+depends="font-util"
+short_desc="Windows 11 fonts"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="custom:Microsoft Proprietary"
+homepage="https://www.microsoft.com"
+# Link from OEM portal (see https://massgrave.dev/windows_ltsc_links)
+distfiles="https://oemsoc.download.prss.microsoft.com/dbazure/X23-81951_${version}.240906-0331.ge_release_svc_refresh_CLIENT_ENTERPRISES_OEM_x64FRE_en-us.iso_640de540-87c4-427f-be87-e6d53a3a60b4?t=2c3b664b-b119-4088-9db1-ccff72c6d22e&P1=102816950270&P2=601&P3=2&P4=OC448onxqdmdUsBUApAiE8pj1FZ%2bEPTU3%2bC6Quq29MVwMyyDUtR%2fsbiy7RdVoZOHaZRndvzeOOnIwJZ2x3%2bmP6YK9cjJSP41Lvs0SulF4SVyL5C0DdDmiWqh2QW%2bcDPj2Xp%2bMrI9NOeElSBS5kkOWP8Eiyf2VkkQFM3g5vIk3HJVvu5sWo6pFKpFv4lML%2bHaIiTSuwbPMs5xwEQTfScuTKfigNlUZPdHRMp1B3uKLgIA3r0IbRpZgHYMXEwXQ%2fSLMdDNQthpqQvz1PThVkx7ObD55CXgt0GNSAWRfjdURWb8ywWk1gT7ozAgpP%2fKNm56U5nh33WZSuMZIuO1SBM2vw%3d%3d>${pkgname}-${version}_${revision}.iso"
+checksum=4f59662a96fc1da48c1b415d6c369d08af55ddd64e8f1c84e0166d9e50405d7a
+restricted=yes
+repository=nonfree
+
+font_dirs="/usr/share/fonts/TTF"
+
+do_extract() {
+	mkdir -p ${wrksrc}
+	7z x -y ${XBPS_SRCDISTDIR}/${pkgname}-${version}/${pkgname}-${version}_${revision}.iso \
+		sources/install.wim
+	wimextract sources/install.wim 1 \
+		/Windows/{Fonts/"*".ttf,System32/Licenses/neutral/"*"/"*"/license.rtf} \
+		--dest-dir ${wrksrc}
+}
+
+do_install() {
+	vlicense license.rtf
+	vmkdir usr/share/fonts/TTF
+	vcopy *.ttf usr/share/fonts/TTF
+}
