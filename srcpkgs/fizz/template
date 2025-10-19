@@ -1,0 +1,28 @@
+# Template file for 'fizz'
+pkgname=fizz
+version=2025.10.13.00
+revision=1
+build_wrksrc=fizz
+build_style=cmake
+configure_args="-Wno-dev -DBUILD_TESTS=ON"
+makedepends="folly"
+short_desc="C++14 implementation of the TLS-1.3 standard"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="BSD-3-Clause"
+homepage="https://github.com/facebookincubator/fizz"
+distfiles="https://github.com/facebookincubator/fizz/archive/v${version}.tar.gz"
+checksum=2a551aa006d8e1daf83b3af40ff795e410541c11157d31d7901eb380c67cf09f
+
+post_install() {
+	vlicense ../LICENSE
+}
+
+fizz-devel_package() {
+	depends="${sourcepkg}>=${version}_${revision} folly"
+	short_desc+=" - development files"
+	pkg_install() {
+		vmove usr/include
+		vmove usr/lib/cmake
+		vmove "usr/lib/*.a"
+	}
+}
