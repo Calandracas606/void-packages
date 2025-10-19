@@ -1,0 +1,19 @@
+# # Template file for 'folly'
+pkgname=folly
+version=2025.10.13.00
+revision=1
+build_style=cmake
+configure_args="-Wno-dev"
+makedepends="binutils-devel boost-devel bzip2-devel double-conversion-devel
+ fmt-devel gflags-devel glog-devel jemalloc-devel libaio-devel libevent-devel
+ liblz4-devel liblzma-devel openssl-devel libsodium-devel
+ libzstd-devel snappy-devel zlib-devel fast_float libdwarf-devel libunwind-devel gtest-devel"
+depends="${makedepends}" #Needs libraries or headers from all the makedepends
+checkdepends="gtest-devel"
+short_desc="Variety of core library components used extensively at Facebook"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="Apache-2.0"
+homepage="https://github.com/facebook/folly"
+distfiles="https://github.com/facebook/folly/archive/v${version}.tar.gz"
+checksum=719423943d6076be646de388e825237c5c9352d6c0542860abdc1279104fd3ab
+patch_args="-Np1"

@@ -1,0 +1,68 @@
+commit d225135b387941ba4f3ce821e889e521b48c7711
+Author: Ben Rogers <benrogers@mac.com>
+Date:   Mon Oct 13 10:01:23 2025 -0700
+
+    feat(cmake): update Boost usage for CMP0167 compliance
+    
+    Summary:
+    **Second attempt at applying this PR, with internal build fix**
+    
+    Use find_package(Boost) without MODULE to use modern Boost targets instead of legacy FindBoost.cmake variables.
+    
+    Reviewed By: AAbiAbi
+    
+    Differential Revision: D84418401
+    
+    Pulled By: afrind
+    
+    fbshipit-source-id: 704e4d7834eb8a32daec5f7837a23b103491b221
+
+diff --git a/CMake/folly-deps.cmake b/CMake/folly-deps.cmake
+index f9cbdcfe4..f25071c31 100644
+--- a/CMake/folly-deps.cmake
++++ b/CMake/folly-deps.cmake
+@@ -35,15 +35,13 @@ else()
+ endif()
+ set(Boost_USE_STATIC_LIBS "${FOLLY_BOOST_LINK_STATIC}")
+ 
+-find_package(Boost 1.51.0 MODULE
++find_package(Boost 1.51.0 REQUIRED
+   COMPONENTS
+     context
+     filesystem
+     program_options
+     regex
+     thread
+-    system
+-  REQUIRED
+ )
+ list(APPEND FOLLY_LINK_LIBRARIES ${Boost_LIBRARIES})
+ list(APPEND FOLLY_INCLUDE_DIRECTORIES ${Boost_INCLUDE_DIRS})
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 90ead6632..c628cb8f4 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -27,6 +27,11 @@ if(POLICY CMP0075)
+   cmake_policy(SET CMP0075 NEW)
+ endif()
+ 
++# CMP0167 The FindBoost module is removed
++if(POLICY CMP0167)
++  cmake_policy(SET CMP0167 NEW)
++endif()
++
+ # includes
+ set(CMAKE_MODULE_PATH
+   "${CMAKE_CURRENT_SOURCE_DIR}/CMake"
+diff --git a/CMake/folly-config.cmake.in b/CMake/folly-config.cmake.in
+index 0b96f0a10..800a3d90b 100644
+--- a/CMake/folly-config.cmake.in
++++ b/CMake/folly-config.cmake.in
+@@ -38,7 +38,6 @@ find_dependency(Boost 1.51.0 MODULE
+     filesystem
+     program_options
+     regex
+-    system
+     thread
+   REQUIRED
+ )
