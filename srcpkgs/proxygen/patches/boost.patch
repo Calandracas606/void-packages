@@ -1,0 +1,12 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a479ada8d..8a59c9926 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -87,7 +87,6 @@ find_package(Boost 1.58 REQUIRED
+     filesystem
+     program_options
+     regex
+-    system
+     thread
+     chrono
+ )

@@ -1,0 +1,50 @@
+commit 240f61811613de8550b10ed93fa0f6482da5fbc4
+Author: Daniel Martinez <danielmartinez@cock.li>
+Date:   Sun Oct 19 13:29:11 2025 -0400
+
+    Revert "use find_package(c-ares) instead of FindCares.cmake"
+    
+    This reverts commit e16bbbd4f2f9770ad4caf359ab78e96301458cdb.
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cc189df5e..3b152ccf8 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -79,7 +79,7 @@ find_package(Zstd REQUIRED)
+ find_package(ZLIB REQUIRED)
+ find_package(OpenSSL REQUIRED)
+ find_package(Threads)
+-find_package(c-ares REQUIRED)
++find_package(Cares REQUIRED)
+ find_package(Boost 1.58 REQUIRED
+   COMPONENTS
+     iostreams
+diff --git a/build/fbcode_builder/CMake/FindCares.cmake b/cmake/FindCares.cmake
+similarity index 100%
+rename from build/fbcode_builder/CMake/FindCares.cmake
+rename to cmake/FindCares.cmake
+diff --git a/cmake/proxygen-config.cmake.in b/cmake/proxygen-config.cmake.in
+index 8899242cb..6849b0a66 100644
+--- a/cmake/proxygen-config.cmake.in
++++ b/cmake/proxygen-config.cmake.in
+@@ -41,7 +41,6 @@ find_dependency(Boost 1.58 REQUIRED
+     system
+     thread
+ )
+-find_dependency(c-ares REQUIRED)
+ 
+ if(NOT TARGET proxygen::proxygen)
+     include("${CMAKE_CURRENT_LIST_DIR}/proxygen-targets.cmake")
+diff --git a/proxygen/lib/CMakeLists.txt b/proxygen/lib/CMakeLists.txt
+index d35ce4b25..c7510b531 100644
+--- a/proxygen/lib/CMakeLists.txt
++++ b/proxygen/lib/CMakeLists.txt
+@@ -312,7 +312,7 @@ target_link_libraries(
+     Boost::iostreams
+     ZLIB::ZLIB
+     ${HTTP3_DEPEND_LIBS}
+-    c-ares::cares
++    ${CARES_LIBRARIES}
+ )
+ 
+ # Install the headers, excluding unit testing related headers
