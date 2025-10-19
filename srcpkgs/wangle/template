@@ -1,0 +1,19 @@
+# Template file for 'wangle'
+pkgname=wangle
+version=2025.10.13.00
+revision=1
+build_wrksrc=wangle
+build_style=cmake
+makedepends="folly fizz-devel"
+depends="folly fizz-devel"
+short_desc="Framework providing a set of common client/server abstractions"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="Apache-2.0"
+homepage="https://github.com/facebook/wangle"
+distfiles="https://github.com/facebook/wangle/releases/download/v${version}/wangle-v${version}.tar.gz"
+checksum=e048d83194613b995a0ab95f7768a8bc5e29f46036f693e716bb754051777bd8
+
+do_check() {
+	# Requires SSL keys
+	ctest --test-dir build -E "SSLContextManagerTest"
+}
