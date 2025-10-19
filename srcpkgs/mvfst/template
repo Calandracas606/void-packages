@@ -1,0 +1,17 @@
+# Template file for 'mvfst'
+pkgname=mvfst
+version=2025.10.13.00
+revision=1
+build_style=cmake
+makedepends="folly fizz-devel"
+depends="folly fizz-devel"
+short_desc="Implementation of the QUIC transport protocol"
+maintainer="Daniel Martinez <danielmartinez@cock.li>"
+license="MIT"
+homepage="https://github.com/facebook/mvfst"
+distfiles="https://github.com/facebook/mvfst/archive/refs/tags/v${version}.tar.gz"
+checksum=c6416c6c79c1a4b5b74d1aa1cf8ef8e80f625c28f6afc9154c8d7d77f796fcb6
+
+post_install() {
+	vlicense LICENSE
+}
